@@ -70,7 +70,10 @@ private fun MainBottomBar(
             NavigationBarItem(
                 selected = it == route.value,
                 label = { Text(it.name) },
-                onClick = { navToRoute(it) },
+                onClick = {
+                    navToRoute(it)
+                    println("Navigation to route $it")
+                          },
                 icon = { Icon(painter = painterResource(it.icon), contentDescription = null) }
             )
         }
@@ -104,7 +107,7 @@ fun MainScreenNavigator(
         }
 
         composable<Routes.Main.GalleryScreen>{
-
+            //Gallery()
         }
 
         composable<Routes.Main.ProfileScreen>{
