@@ -1,4 +1,4 @@
-package at.htlwels.ires.ui.theme
+package at.htlwels.ires.view.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
