@@ -20,8 +20,11 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -67,47 +70,36 @@ fun GalleryCameraPager(){
 }
 
 @Composable
-fun CameraScreen(){
-
+fun CameraScreen() {
     val context = LocalContext.current
 
+    // State to track whether permissions are granted
+    var hasPermissions by remember { mutableStateOf(
+        CAMERAX_PERMISSIONS.all {
+            ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
+        }
+    ) }
 
     val requestPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
         onResult = { permissions ->
+            hasPermissions = CAMERAX_PERMISSIONS.all { permissions[it] == true }
 
-            if (CAMERAX_PERMISSIONS.all { permissions[it] == true }) {
-                // I have access to location
-
-                println("JO SICHA")
-
-            } else {
-                // Ask for permission
-
-                // rationale is the dialog asking for permission, if this has been denied
-                // previously, then the apps setting to accept a rationale for the specific permission
-                // might be false, which forces the user to manually change the permission in the setting
-
-                val acceptsRationale = CAMERAX_PERMISSIONS.all {
+            if (!hasPermissions) {
+                val acceptsRationale = CAMERAX_PERMISSIONS.any {
                     ActivityCompat.shouldShowRequestPermissionRationale(context as Activity, it)
                 }
 
-                println("Accepts rationale? $acceptsRationale")
-
                 if (acceptsRationale) {
-                    //we can just tell the user to click the button again if the app still accepts a rationale
                     Toast.makeText(
                         context,
-                        "Location Permission is required for this feature",
+                        "Camera permission is required. Please try again.",
                         Toast.LENGTH_LONG
                     ).show()
-                } else{
-                    //otherwise they will have to change it in the settings and if they attempt to click the
-                    //button again, the application will deny the rationale, run through this method, and
-                    //end up here again
+                } else {
                     Toast.makeText(
                         context,
-                        "Location Permission is required, please enable in settings.",
+                        "Camera permission is required. Please enable it in settings.",
                         Toast.LENGTH_LONG
                     ).show()
                 }
@@ -115,19 +107,15 @@ fun CameraScreen(){
         }
     )
 
-    if( !CAMERAX_PERMISSIONS.all {
-            ContextCompat.checkSelfPermission(
-                context,
-                it
-            ) == PackageManager.PERMISSION_GRANTED
-        }
-    ) {
+    // Check and launch the permission request if necessary
+    if (!hasPermissions) {
         LaunchedEffect(Unit) {
             requestPermissionLauncher.launch(CAMERAX_PERMISSIONS)
         }
 
-        Text("Camera Permission not granted. Go to settings and enable")
+        Text("Camera Permission not granted. Go to settings and enable.")
     } else {
+        // Camera preview when permissions are granted
         val controller = remember {
             LifecycleCameraController(context)
         }
@@ -136,7 +124,7 @@ fun CameraScreen(){
             controller.apply {
                 setEnabledUseCases(
                     CameraController.IMAGE_CAPTURE or
-                    CameraController.VIDEO_CAPTURE
+                            CameraController.VIDEO_CAPTURE
                 )
             },
             modifier = Modifier.fillMaxSize()
