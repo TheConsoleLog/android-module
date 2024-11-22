@@ -1,35 +1,79 @@
 package at.htlwels.ires.view.main
 
 import android.Manifest
-import android.content.Context
+import android.app.Activity
 import android.content.pm.PackageManager
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Button
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
-import androidx.core.app.ComponentActivity
 import androidx.core.content.ContextCompat
-import at.htlwels.ires.view.MainActivity
+import kotlinx.coroutines.launch
+
 
 @Composable
-fun Gallery(
-    context: Context
-){
-    println("should request Coarse location:" + ActivityCompat.shouldShowRequestPermissionRationale(
-        context as MainActivity,
-        Manifest.permission.ACCESS_COARSE_LOCATION)
-    )
+fun GalleryCameraPager(){
+
+    val tabs = listOf("Camera", "Gallery")
+    val pagerState = rememberPagerState { 2 }
+    val pagerScrollScope = rememberCoroutineScope()
+
+    Column (modifier = Modifier.fillMaxSize()) {
+        TabRow(
+            selectedTabIndex = pagerState.currentPage,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            tabs.forEachIndexed { index, title ->
+                Tab(
+                    selected = pagerState.currentPage == index,
+                    onClick = {
+                        pagerScrollScope.launch {
+                            pagerState.animateScrollToPage(index)
+                        }
+                    },
+                    text = { Text(title) }
+                )
+            }
+        }
+
+        HorizontalPager(state = pagerState) { page ->
+
+            when(page){
+                0 ->  { CameraScreen() }
+                1 ->  { GallerySubScreen() }
+            }
+        }
+    }
+}
+
+@Composable
+fun CameraScreen(){
+
+    val context = LocalContext.current
+
 
     val requestPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
         onResult = { permissions ->
 
-            if (permissions[Manifest.permission.CAMERA] == true
-                && permissions[Manifest.permission.RECORD_AUDIO] == true
-            ) {
+            if (CAMERAX_PERMISSIONS.all { permissions[it] == true }) {
                 // I have access to location
 
                 println("JO SICHA")
@@ -41,18 +85,11 @@ fun Gallery(
                 // previously, then the apps setting to accept a rationale for the specific permission
                 // might be false, which forces the user to manually change the permission in the setting
 
-                val acceptsRationale = ActivityCompat.shouldShowRequestPermissionRationale(
-                    //dont open this permission rationale inside another screen, do it inside the MainActivity
-                    context as MainActivity,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                )
-                        ||
-                        ActivityCompat.shouldShowRequestPermissionRationale(
-                            context as MainActivity,
-                            Manifest.permission.ACCESS_FINE_LOCATION
-                        )
+                val acceptsRationale = CAMERAX_PERMISSIONS.all {
+                    ActivityCompat.shouldShowRequestPermissionRationale(context as Activity, it)
+                }
 
-                println(acceptsRationale)
+                println("Accepts rationale? $acceptsRationale")
 
                 if (acceptsRationale) {
                     //we can just tell the user to click the button again if the app still accepts a rationale
@@ -75,23 +112,38 @@ fun Gallery(
         }
     )
 
-    Button(onClick = {
-        //Request location permission
-        requestPermissionLauncher.launch(CAMERAX_PERMISSIONS)
-    }) {
-        Text("Get Location")
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(color = Color.Green)){
+        Button(onClick = {
+            //Request location permission
+            requestPermissionLauncher.launch(CAMERAX_PERMISSIONS)
+        }) {
+            Text("Get Location")
 
-        if( CAMERAX_PERMISSIONS.all {
-            ContextCompat.checkSelfPermission(
-                context,
-                it
-            ) == PackageManager.PERMISSION_GRANTED
+            if( CAMERAX_PERMISSIONS.all {
+                    ContextCompat.checkSelfPermission(
+                        context,
+                        it
+                    ) == PackageManager.PERMISSION_GRANTED
+                }
+            ) {
+                println("all permissions granted jo sicha")
+            } else {
+                println("permission not granted nedsosuppa")
             }
-        ) {
-            println("all permissions granted jo sicha")
-        } else {
-            println("permission not granted nedsosuppa")
         }
+    }
+
+
+}
+
+@Composable
+fun GallerySubScreen(){
+    Box (modifier = Modifier.fillMaxSize().background(color = Color.Red), contentAlignment = Alignment.Center) {
+        Text(
+            "Gallery screen wuii"
+        )
     }
 }
 

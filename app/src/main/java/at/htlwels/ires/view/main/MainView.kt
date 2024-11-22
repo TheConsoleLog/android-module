@@ -4,7 +4,6 @@ package at.htlwels.ires.view.main
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -24,7 +23,6 @@ import androidx.navigation.toRoute
 import at.htlwels.ires.control.MainViewModel
 import at.htlwels.ires.view.Routes
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScaffold(logout: () -> Unit){
 
@@ -36,7 +34,13 @@ fun MainScaffold(logout: () -> Unit){
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            viewModel.mainRoutesInfo[currentScreen]?.invoke()
+
+            when (currentScreen){
+                Routes.Main.TourScreen -> { }
+                Routes.Main.ActivitiesScreen -> {}
+                Routes.Main.GalleryScreen -> { }
+                Routes.Main.ProfileScreen -> {}
+            }
         },
         bottomBar = {
             MainBottomBar( navToRoute = {
@@ -52,7 +56,8 @@ fun MainScaffold(logout: () -> Unit){
 
         MainScreenNavigator(
             navController,
-            innerPadding, logout = logout
+            innerPadding,
+            logout = logout
         )
     }
 }
@@ -95,7 +100,7 @@ fun MainScreenNavigator(
     NavHost(
         navController = navController,
         startDestination = Routes.Main.TourScreen,
-        modifier = Modifier.padding(pV)
+        modifier = Modifier.padding(pV),
     ) {
 
         composable <Routes.Main.TourScreen> {
@@ -107,7 +112,7 @@ fun MainScreenNavigator(
         }
 
         composable<Routes.Main.GalleryScreen>{
-            //Gallery()
+            GalleryCameraPager()
         }
 
         composable<Routes.Main.ProfileScreen>{

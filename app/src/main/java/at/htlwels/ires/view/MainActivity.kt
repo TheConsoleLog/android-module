@@ -8,17 +8,15 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import at.htlwels.ires.view.auth.RegisterScreen
 import at.htlwels.ires.control.AuthorizationViewModel
 import at.htlwels.ires.view.auth.ForgotPasswordScreen
 import at.htlwels.ires.view.auth.LoginScreen
-import at.htlwels.ires.view.main.Gallery
+import at.htlwels.ires.view.auth.RegisterScreen
 import at.htlwels.ires.view.main.MainScaffold
 import at.htlwels.ires.view.theme.IresTheme
 import kotlinx.coroutines.delay
@@ -31,7 +29,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             IresTheme {
-                Gallery(LocalContext.current)
+                TopLevelNavigator()
             }
         }
     }
