@@ -22,6 +22,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import at.htlwels.ires.control.MainViewModel
 import at.htlwels.ires.view.Routes
+import at.htlwels.ires.view.main.gallery.GalleryCameraPager
 
 @Composable
 fun MainScaffold(logout: () -> Unit){

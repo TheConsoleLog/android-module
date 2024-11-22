@@ -1,4 +1,4 @@
-package at.htlwels.ires.view.main
+package at.htlwels.ires.view.main.gallery
 
 import android.Manifest
 import android.app.Activity
@@ -6,6 +6,8 @@ import android.content.pm.PackageManager
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.camera.view.CameraController
+import androidx.camera.view.LifecycleCameraController
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,11 +15,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.Button
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -112,30 +115,33 @@ fun CameraScreen(){
         }
     )
 
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(color = Color.Green)){
-        Button(onClick = {
-            //Request location permission
-            requestPermissionLauncher.launch(CAMERAX_PERMISSIONS)
-        }) {
-            Text("Get Location")
-
-            if( CAMERAX_PERMISSIONS.all {
-                    ContextCompat.checkSelfPermission(
-                        context,
-                        it
-                    ) == PackageManager.PERMISSION_GRANTED
-                }
-            ) {
-                println("all permissions granted jo sicha")
-            } else {
-                println("permission not granted nedsosuppa")
-            }
+    if( !CAMERAX_PERMISSIONS.all {
+            ContextCompat.checkSelfPermission(
+                context,
+                it
+            ) == PackageManager.PERMISSION_GRANTED
         }
+    ) {
+        LaunchedEffect(Unit) {
+            requestPermissionLauncher.launch(CAMERAX_PERMISSIONS)
+        }
+
+        Text("Camera Permission not granted. Go to settings and enable")
+    } else {
+        val controller = remember {
+            LifecycleCameraController(context)
+        }
+
+        CameraPreview(
+            controller.apply {
+                setEnabledUseCases(
+                    CameraController.IMAGE_CAPTURE or
+                    CameraController.VIDEO_CAPTURE
+                )
+            },
+            modifier = Modifier.fillMaxSize()
+        )
     }
-
-
 }
 
 @Composable
