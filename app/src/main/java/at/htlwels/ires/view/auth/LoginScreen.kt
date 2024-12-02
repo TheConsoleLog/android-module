@@ -34,7 +34,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import at.htlwels.bonfire.view.auth.AuthButton
+import at.htlwels.ires.view.FullWidthButton
 import at.htlwels.bonfire.view.auth.ErrorText
 import at.htlwels.bonfire.view.auth.PasswordField
 import at.htlwels.ires.R
@@ -118,7 +118,7 @@ fun LoginScreen(
                     if (loginState is Resource.Loading) {
                         CircularProgressIndicator()
                     } else {
-                        AuthButton("Anmelden") {
+                        FullWidthButton("Anmelden") {
                             vm.login(username, password.value)
                         }
                     }
@@ -147,7 +147,7 @@ fun LoginScreen(
 
                     VerticalSpacer(24)
 
-                    AuthButton("Registrieren") {
+                    FullWidthButton("Registrieren") {
                         navToSignup(username, password.value)
                     }
                 }

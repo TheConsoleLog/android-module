@@ -45,9 +45,9 @@ fun TopLevelNavigator(){
     val loginScreenSnackBarState = remember { SnackbarHostState() }
     val snackBarScope = rememberCoroutineScope()
 
-    fun setLoginSnackBar (message: String, delayMs: Long? = null){
+    fun setLoginSnackBar (message: String, delayMs: Long = 0){
         snackBarScope.launch {
-            delay(delayMs ?: 0)
+            delay(delayMs)
             loginScreenSnackBarState.showSnackbar(message)
         }
     }
@@ -84,7 +84,7 @@ fun TopLevelNavigator(){
         composable<Routes.Authorization.ForgotPWScreen>{
             ForgotPasswordScreen(
                 viewModel = authVM,
-                setLoginSnackBar = { msg: String, delay: Long? -> setLoginSnackBar(msg, delay) },
+                setLoginSnackBar = { msg: String, delay: Long -> setLoginSnackBar(msg, delay) },
                 navToRoute = { navController.navigate(it) }
             )
         }

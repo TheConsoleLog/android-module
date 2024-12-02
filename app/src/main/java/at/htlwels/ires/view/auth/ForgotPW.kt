@@ -46,7 +46,7 @@ import at.htlwels.ires.view.VerticalSpacer
 @Composable
 fun ForgotPasswordScreen(
     viewModel: AuthorizationViewModel,
-    setLoginSnackBar: (message:String, delay: Long?) -> Unit,
+    setLoginSnackBar: (String, Long) -> Unit,
     navToRoute: (Routes.Authorization) -> Unit
 ){
 
@@ -140,7 +140,7 @@ private fun ResetPwStage1(viewModel: AuthorizationViewModel){
 private fun ResetPwStage2(
     viewModel: AuthorizationViewModel,
     navToRoute: (Routes.Authorization) -> Unit,
-    setLoginSnackBar: (String, delay: Long?) -> Unit
+    setLoginSnackBar: (String, delay: Long) -> Unit
 ){
     var tokenState by remember { mutableStateOf("")}
     val newPasswordState = remember {mutableStateOf("")}

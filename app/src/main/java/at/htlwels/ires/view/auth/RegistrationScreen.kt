@@ -37,7 +37,7 @@ import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import at.htlwels.bonfire.view.auth.AuthButton
+import at.htlwels.ires.view.FullWidthButton
 import at.htlwels.bonfire.view.auth.BackButtonRow
 import at.htlwels.bonfire.view.auth.ErrorText
 import at.htlwels.bonfire.view.auth.PasswordField
@@ -138,7 +138,7 @@ fun RegisterScreen(
                         if(signupState is Resource.Loading){
                             CircularProgressIndicator()
                         } else {
-                            AuthButton("Submit", onClick = {
+                            FullWidthButton("Submit", onClick = {
                                 authModel.signup(
                                     firstname = firstName.value,
                                     username = userName.value,
