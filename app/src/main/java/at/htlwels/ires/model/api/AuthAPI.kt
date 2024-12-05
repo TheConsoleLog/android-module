@@ -19,14 +19,14 @@ import retrofit2.http.Path
 
 private val retrofit = Retrofit
     .Builder()
-    .baseUrl("https://backend-module.onrender.com/")
+    .baseUrl("https://backend-module-1-s138.onrender.com/")
     .addConverterFactory(GsonConverterFactory.create())
     .build()
 
-val authService: RestAPI = retrofit.create(RestAPI::class.java)
+val authService: AuthAPI = retrofit.create(AuthAPI::class.java)
 
 
-interface RestAPI {
+interface AuthAPI {
 
 
     @POST("auth/signup")

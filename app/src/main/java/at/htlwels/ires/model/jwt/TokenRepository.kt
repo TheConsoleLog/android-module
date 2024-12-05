@@ -11,6 +11,7 @@ object TokenRepository {
 
     private const val E = "No matching Token found in TokenRepository Singleton."
 
-    fun getAccessSafe() : String = accessToken ?: throw RuntimeException(E)
-    fun getRefreshSafe() : String = refreshToken ?: throw RuntimeException(E)
+    fun getAccessSafe() = accessToken ?: throw RuntimeException(E)
+    fun getRefreshSafe() = refreshToken ?: throw RuntimeException(E)
+    fun getAccessWithBearer() = "Bearer " + getAccessSafe()
 }

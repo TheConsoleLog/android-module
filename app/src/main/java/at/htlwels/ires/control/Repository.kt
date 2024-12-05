@@ -51,6 +51,9 @@ class ResponseHandler{
 
             } catch (e: HttpException){
 
+                println(e.localizedMessage)
+                println(e.code())
+
                 //if the http error code is 401 that means the access token might be expired, so
                 //we try to get a new access token by using this same function with a different call
                 if(e.code() == 401){
