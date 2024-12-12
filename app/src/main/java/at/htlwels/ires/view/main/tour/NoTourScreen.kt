@@ -13,7 +13,9 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -30,8 +32,16 @@ fun NoTourScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(32.dp),
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
+        Text("No active Tour was found :(")
+        TextButton(onClick = { viewModel.fetchUserTour() }) {
+            Text("Try again")
+        }
+
+        VerticalSpacer(48)
 
         Button(
             modifier = Modifier
