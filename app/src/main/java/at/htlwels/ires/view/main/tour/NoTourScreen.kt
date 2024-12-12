@@ -18,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import at.htlwels.ires.R
-import at.htlwels.ires.control.TourStage
 import at.htlwels.ires.control.TourViewModel
 import at.htlwels.ires.view.HorizontalSpacer
 import at.htlwels.ires.view.VerticalSpacer
@@ -38,7 +37,7 @@ fun NoTourScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp),
-            onClick = { viewModel.updateTourStage(TourStage.Joining) }
+            onClick = { /*viewModel.updateTourStage(TourStage.Joining)*/ }
         ) {
             Row {
                 Text("Join Tour")
@@ -54,7 +53,7 @@ fun NoTourScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp),
-            onClick = { viewModel.updateTourStage(TourStage.Creating) }
+            onClick = { /*viewModel.updateTourStage(TourStage.Creating)*/ }
         ) {
             Text("Create Tour")
             HorizontalSpacer(8)

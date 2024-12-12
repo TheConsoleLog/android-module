@@ -152,7 +152,7 @@ fun RegisterScreen(
                         val finalErrorState = signupState
                         if(finalErrorState is Resource.Error){
                             VerticalSpacer(16)
-                            ErrorText(finalErrorState.message)
+                            ErrorText(finalErrorState.getMessage())
                         }
                     }
                 }

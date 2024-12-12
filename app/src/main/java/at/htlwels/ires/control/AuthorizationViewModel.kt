@@ -95,16 +95,13 @@ class AuthorizationViewModel(application: Application) : AndroidViewModel(applic
                 _sp.storeTokens(access = res.data.access)
             } else if (res is Resource.Error) {
                 println("autologin failed: ")
-                println(res.message)
+                println(res.getMessage())
             }
         }
     }
 
     fun resetLoginState(){ _loginState.value = Resource.Ready }
     fun resetSignupState(){ _signupState.value = Resource.Ready }
-
-    fun setSignupError(message: String){ _signupState.value = Resource.Error(message) }
-    fun setLoginError(message: String){ _loginState.value = Resource.Error(message) }
 
     var resetPwUsernameState =  mutableStateOf("")
 

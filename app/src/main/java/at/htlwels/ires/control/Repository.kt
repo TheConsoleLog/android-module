@@ -4,7 +4,6 @@ import androidx.compose.runtime.MutableState
 import at.htlwels.bonfire.model.jwt.TokenRepository
 import at.htlwels.ires.model.Resource
 import at.htlwels.ires.model.api.authService
-import at.htlwels.ires.model.api.getMessage
 import at.htlwels.ires.model.dto.auth.RenewRequest
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
@@ -59,8 +58,8 @@ class ResponseHandler{
                 if(e.code() == 401){
 
                     return when(requestType){
-                        RequestType.TokenRenewal -> Resource.Error("Token Renewal resulted in 401 not authorized.")
-                        RequestType.NormalWithNewToken -> Resource.Error("Still unauthorized with new access Token.")
+                        RequestType.TokenRenewal -> Resource.Error(e, "Token Renewal resulted in 401 not authorized.")
+                        RequestType.NormalWithNewToken -> Resource.Error(e,"Still unauthorized with new access Token.")
                         RequestType.Normal -> {
 
                             //try to refresh the access token
@@ -76,19 +75,22 @@ class ResponseHandler{
                                 return call (requestType = RequestType.NormalWithNewToken) { apiCall() }
 
                             } else {
-                                return Resource.Error("Unauthorized and failed to refresh access token.")
+                                return Resource.Error(
+                                    preparedMessage = "Unauthorized and failed to refresh access token.",
+                                    details = e
+                                )
                             }
                         }
                     }
                 }
 
-                return Resource.Error(e.getMessage())
+                return Resource.Error(e)
 
             } catch(e: SocketTimeoutException){
-                return Resource.Error("Ressource konnte nicht geladen werden: Timeout")
+                return Resource.Error(e, "Ressource konnte nicht geladen werden: Timeout")
             } catch (e: Exception) {
                 println("Unexpected error: ${e.localizedMessage}")
-                return Resource.Error("An unexpected error occurred: ${e.localizedMessage}")
+                return Resource.Error(e,"An unexpected error occurred: ${e.localizedMessage}")
             }
         }
     }

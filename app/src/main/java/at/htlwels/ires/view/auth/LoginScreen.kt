@@ -127,7 +127,7 @@ fun LoginScreen(
                     val currentLoginState = loginState
                     if (currentLoginState is Resource.Error) {
                         VerticalSpacer(16)
-                        ErrorText(currentLoginState.message)
+                        ErrorText(currentLoginState.getMessage())
                     } else {
                         VerticalSpacer(8)
                     }

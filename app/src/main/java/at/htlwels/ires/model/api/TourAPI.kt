@@ -5,6 +5,7 @@ import at.htlwels.ires.model.dto.tour.TourResponse
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
 
@@ -25,4 +26,8 @@ interface TourAPI {
         @Header("Authorization") bearerToken: String,
         @Body tour: SimpleTour,
     ) : TourResponse
+    //todo tourresponse oder tour????
+
+    @GET("tour")
+    suspend fun getUserTour(@Header("Authorization") bearerToken: String) : TourResponse
 }

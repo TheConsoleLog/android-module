@@ -14,34 +14,43 @@ import kotlinx.coroutines.launch
 
 class TourViewModel : ViewModel() {
 
-    private val _tourStage = mutableStateOf(TourStage.Ready)
-    val tourStage: State<TourStage> = _tourStage
+    private val _tourStage: MutableState<Resource<TourResponse>> = mutableStateOf(Resource.Ready)
+    val tourStage: State<Resource<TourResponse>> = _tourStage
 
     private val _tourCreationState: MutableState<Resource<TourResponse>> = mutableStateOf(Resource.Ready)
     val tourCreationState: State<Resource<TourResponse>> = _tourCreationState
 
 
-
-    fun updateTourStage(new: TourStage){ _tourStage.value = new }
-
+    /**
+     * On Success of this Method, [_tourStage] will be set to Success as well, therefore navigating the
+     * User to the TourDetailScreen or similar
+     */
     fun postNewTour(tour: SimpleTour){
         viewModelScope.launch {
             ResponseHandler.callWithStateUpdate(
                 state = _tourCreationState,
                 apiCall = { tourService.createTour(
                     tour = tour,
-                    bearerToken = TokenRepository.getAccessWithBearer()
-                ) }
+                    bearerToken = TokenRepository.getAccessWithBearer(),
+                ) },
+                onSuccess = {
+                    _tourStage.value = Resource.Success(it)
+                }
             )
         }
     }
 
-    fun startTour(){ _tourStage.value = TourStage.Running }
-}
+    fun fetchUserTour(){
+        println("Requesting tour of refresh Token ${TokenRepository.refreshToken}")
 
-enum class TourStage{
-    Ready,
-    Creating,
-    Joining,
-    Running
+        viewModelScope.launch {
+            ResponseHandler.callWithStateUpdate(
+                state = _tourStage,
+                apiCall = { tourService.getUserTour(TokenRepository.getAccessWithBearer())},
+                onSuccess = { println(it) }
+            )
+        }
+    }
+
+
 }

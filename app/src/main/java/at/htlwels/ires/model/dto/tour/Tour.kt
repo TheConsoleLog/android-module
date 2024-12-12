@@ -7,12 +7,18 @@ data class SimpleTour (
     val endDate: String
 )
 
-data class TourResponse(
+data class Tour(
     val accessCode: String,
     val description: String,
     val endDate: String,
     val name: String,
     val startDate: String,
     val tId: Int,
-    val tourGuide: Int
+    val tourGuide: Int,
+    val isTourGuide: Boolean
 )
+
+data class TourResponse(
+    val tour: Tour
+)
+

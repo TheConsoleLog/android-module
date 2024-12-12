@@ -120,7 +120,7 @@ private fun ResetPwStage1(viewModel: AuthorizationViewModel){
 
 
     if(emailSentState.value is Resource.Error){
-        val errorMSG = (emailSentState.value as Resource.Error).message
+        val errorMSG = (emailSentState.value as Resource.Error).getMessage()
         VerticalSpacer(8)
         Text("Email konnte nicht gesendet werden: $errorMSG", color = MaterialTheme.colorScheme.error)
     }
@@ -181,7 +181,7 @@ private fun ResetPwStage2(
     PasswordField(password = newPasswordState)
 
     if(resetPasswordState.value is Resource.Error){
-        val errorMSG = (resetPasswordState.value as Resource.Error).message
+        val errorMSG = (resetPasswordState.value as Resource.Error).getMessage()
         VerticalSpacer(8)
         Text("Passwort wurde nicht zurückgesetzt: $errorMSG", color = MaterialTheme.colorScheme.error)
     }

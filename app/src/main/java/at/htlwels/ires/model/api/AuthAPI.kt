@@ -45,4 +45,4 @@ interface AuthAPI {
     suspend fun resetPassword(@Body body: ResetPasswordRequest)
 }
 
-fun HttpException.getMessage() = Gson().fromJson(response()?.errorBody()?.string(), Resource.Error::class.java).message
+fun HttpException.getMessage() = Gson().fromJson(response()?.errorBody()?.string(), Resource.Error::class.java).getMessage()

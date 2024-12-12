@@ -52,10 +52,6 @@ fun TourCreationScreen(
 
     val tourCreationState by viewModel.tourCreationState
 
-    if(tourCreationState is Resource.Success){
-        viewModel.startTour()
-    }
-
     Column (
         modifier = Modifier.fillMaxSize().padding(16.dp)
     ) {
@@ -87,13 +83,14 @@ fun TourCreationScreen(
         } else {
             Button(
                 onClick = {
+
                     viewModel.postNewTour(SimpleTour(nameState, descriptionState, "02.05.2006", "02.05.2006"))
                 }
             ) { Text("Tour erstellen") }
         }
 
         tourCreationState.let {
-            if(it is Resource.Error) ErrorText(it.message)
+            if(it is Resource.Error) ErrorText(it.getMessage())
         }
 
     }
