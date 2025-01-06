@@ -70,7 +70,7 @@ class AuthorizationViewModel(application: Application) : AndroidViewModel(applic
     }
 
     fun signup(username: String, firstname: String, email: String, password: String) {
-        authorize(SignupRequest("02.05.2005", email, firstname, "mustermann", password, username))
+        authorize(SignupRequest( email, firstname, "mustermann", password, username))
     }
 
 

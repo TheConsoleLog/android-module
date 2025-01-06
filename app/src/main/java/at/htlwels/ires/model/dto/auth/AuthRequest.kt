@@ -8,7 +8,6 @@ data class LoginRequest(
 ) : AuthRequest
 
 data class SignupRequest(
-    val dateOfBirth: String,
     val email: String,
     val firstName: String,
     val lastName: String,

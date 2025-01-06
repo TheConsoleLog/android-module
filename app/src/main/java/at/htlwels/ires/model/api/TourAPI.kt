@@ -12,7 +12,7 @@ import retrofit2.http.POST
 
 private val retrofit = Retrofit
     .Builder()
-    .baseUrl("https://backend-module-1-s138.onrender.com/")
+    .baseUrl("https://itp-backend-1062658395636.europe-west3.run.app/")
     .addConverterFactory(GsonConverterFactory.create())
     .build()
 
