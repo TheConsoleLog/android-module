@@ -35,9 +35,10 @@ import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import at.htlwels.bonfire.view.auth.ErrorText
-import at.htlwels.ires.control.TourViewModel
+import at.htlwels.ires.control.NoTourViewModel
 import at.htlwels.ires.model.Resource
 import at.htlwels.ires.model.dto.tour.SimpleTour
+import at.htlwels.ires.model.dto.tour.Tour
 import at.htlwels.ires.view.VerticalSpacer
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -45,7 +46,8 @@ import java.util.Locale
 
 @Composable
 fun TourCreationScreen(
-    viewModel: TourViewModel
+    viewModel: NoTourViewModel,
+    onSuccess: (Tour) -> Unit
 ){
     var nameState by remember { mutableStateOf("") }
     var descriptionState by remember { mutableStateOf("") }
@@ -83,14 +85,17 @@ fun TourCreationScreen(
         } else {
             Button(
                 onClick = {
-
-                    viewModel.postNewTour(SimpleTour(nameState, descriptionState, "02.05.2006", "02.05.2006"))
+                    viewModel.postNewTour(
+                        SimpleTour(nameState, descriptionState, "02.05.2025", "02.06.2025"),
+                        onSuccess
+                    )
                 }
             ) { Text("Tour erstellen") }
         }
 
         tourCreationState.let {
-            if(it is Resource.Error) ErrorText(it.getMessage())
+            if(it is Resource.Error) ErrorText( it.getMessage())
+            println("error detected")
         }
 
     }

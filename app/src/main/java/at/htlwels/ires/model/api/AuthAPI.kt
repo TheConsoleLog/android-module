@@ -1,6 +1,6 @@
 package at.htlwels.ires.model.api
 
-import at.htlwels.ires.model.Resource
+import at.htlwels.ires.model.dto.CustomHTTPError
 import at.htlwels.ires.model.dto.auth.AuthResponse
 import at.htlwels.ires.model.dto.auth.LoginRequest
 import at.htlwels.ires.model.dto.auth.RenewRequest
@@ -19,7 +19,7 @@ import retrofit2.http.Path
 
 private val retrofit = Retrofit
     .Builder()
-    .baseUrl("https://backend-module-1-s138.onrender.com/")
+    .baseUrl("https://itp-backend-1062658395636.europe-west3.run.app/")
     .addConverterFactory(GsonConverterFactory.create())
     .build()
 
@@ -45,4 +45,4 @@ interface AuthAPI {
     suspend fun resetPassword(@Body body: ResetPasswordRequest)
 }
 
-fun HttpException.getMessage() = Gson().fromJson(response()?.errorBody()?.string(), Resource.Error::class.java).getMessage()
+fun HttpException.getMessage() = Gson().fromJson(response()?.errorBody()?.string(), CustomHTTPError::class.java).message

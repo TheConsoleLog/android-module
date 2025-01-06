@@ -4,6 +4,7 @@ import androidx.compose.runtime.MutableState
 import at.htlwels.bonfire.model.jwt.TokenRepository
 import at.htlwels.ires.model.Resource
 import at.htlwels.ires.model.api.authService
+import at.htlwels.ires.model.api.getMessage
 import at.htlwels.ires.model.dto.auth.RenewRequest
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
@@ -83,8 +84,7 @@ class ResponseHandler{
                         }
                     }
                 }
-
-                return Resource.Error(e)
+                return Resource.Error(e, e.getMessage())
 
             } catch(e: SocketTimeoutException){
                 return Resource.Error(e, "Ressource konnte nicht geladen werden: Timeout")

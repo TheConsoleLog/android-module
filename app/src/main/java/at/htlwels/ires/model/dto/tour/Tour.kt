@@ -14,11 +14,14 @@ data class Tour(
     val name: String,
     val startDate: String,
     val tId: Int,
-    val tourGuide: Int,
-    val isTourGuide: Boolean
+    val tourGuide: Int
 )
 
 data class TourResponse(
     val tour: Tour
+)
+
+data class JoinTourRequest(
+    val accessCode: String
 )
 

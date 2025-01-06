@@ -20,14 +20,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import at.htlwels.ires.R
-import at.htlwels.ires.control.TourViewModel
+import at.htlwels.ires.control.NoTourViewModel
 import at.htlwels.ires.view.HorizontalSpacer
 import at.htlwels.ires.view.VerticalSpacer
 
 @Composable
 fun NoTourScreen(
-    viewModel: TourViewModel
+    viewModel: NoTourViewModel,
+    tryToFetchAgain: () -> Unit
 ){
+
     Column (
         modifier = Modifier
             .fillMaxSize()
@@ -37,7 +39,7 @@ fun NoTourScreen(
     ) {
 
         Text("No active Tour was found :(")
-        TextButton(onClick = { viewModel.fetchUserTour() }) {
+        TextButton(onClick = tryToFetchAgain) {
             Text("Try again")
         }
 
@@ -47,7 +49,7 @@ fun NoTourScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp),
-            onClick = { /*viewModel.updateTourStage(TourStage.Joining)*/ }
+            onClick = { viewModel.currentScreen.value = at.htlwels.ires.control.NoTourScreen.Joining }
         ) {
             Row {
                 Text("Join Tour")
@@ -63,7 +65,7 @@ fun NoTourScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp),
-            onClick = { /*viewModel.updateTourStage(TourStage.Creating)*/ }
+            onClick = { viewModel.currentScreen.value = at.htlwels.ires.control.NoTourScreen.Creating }
         ) {
             Text("Create Tour")
             HorizontalSpacer(8)
