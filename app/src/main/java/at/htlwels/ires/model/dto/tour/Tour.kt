@@ -14,7 +14,11 @@ data class Tour(
     val name: String,
     val startDate: String,
     val tId: Int,
-    val tourGuide: Int
+    val tourGuide: Int,
+    val participant: List<User>,
+    val createdBy: User,
+    val checkpoints: List<Any>, //TODO
+    val isTourGuide: Boolean
 )
 
 data class TourResponse(
@@ -25,3 +29,8 @@ data class JoinTourRequest(
     val accessCode: String
 )
 
+data class User(
+    val aId: Int,
+    val firstName: String,
+    val userName: String
+)

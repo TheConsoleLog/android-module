@@ -5,13 +5,16 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -31,18 +34,18 @@ fun MainScaffold(logout: () -> Unit){
     val navController = rememberNavController()
     val viewModel : MainViewModel = viewModel()
 
-    val currentScreen by viewModel.currentScreen
+    val topBarState: MutableState<@Composable () -> Unit> = remember { mutableStateOf( @Composable{} ) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-
-            when (currentScreen){
-                Routes.Main.TourScreen -> { }
-                Routes.Main.ActivitiesScreen -> {}
-                Routes.Main.GalleryScreen -> { }
-                Routes.Main.ProfileScreen -> {}
+            MaterialTheme (colorScheme = MaterialTheme.colorScheme.copy(
+                surface = MaterialTheme.colorScheme.surfaceContainerLow, //TODO befragen was besser ausschaut, ob ohne oder mit hintergrund unterschied
+                onSurface = MaterialTheme.colorScheme.onSurface
+            )) {
+                topBarState.value()
             }
+
         },
         bottomBar = {
             MainBottomBar( navToRoute = {
@@ -59,7 +62,8 @@ fun MainScaffold(logout: () -> Unit){
         MainScreenNavigator(
             navController,
             innerPadding,
-            logout = logout
+            logout = logout,
+            updateTopBar = { topBarState.value = it }
         )
     }
 }
@@ -97,7 +101,8 @@ private fun MainBottomBar(
 fun MainScreenNavigator(
     navController: NavHostController,
     pV: PaddingValues,
-    logout: () -> Unit
+    logout: () -> Unit,
+    updateTopBar: (@Composable () -> Unit) -> Unit
 ){
     NavHost(
         navController = navController,
@@ -106,7 +111,10 @@ fun MainScreenNavigator(
     ) {
 
         composable <Routes.Main.TourScreen> {
-            TourScreen(viewModel = viewModel())
+            TourScreen(
+                viewModel = viewModel(),
+                updateTopBar
+            )
         }
 
         composable<Routes.Main.ActivitiesScreen>{
