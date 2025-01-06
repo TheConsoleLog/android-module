@@ -15,7 +15,7 @@ data class Tour(
     val startDate: String,
     val tId: Int,
     val tourGuide: Int,
-    val participant: List<User>,
+    val participants: List<User>,
     val createdBy: User,
     val checkpoints: List<Any>, //TODO
     val isTourGuide: Boolean

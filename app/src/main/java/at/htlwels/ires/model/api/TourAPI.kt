@@ -7,9 +7,11 @@ import at.htlwels.ires.model.dto.tour.TourResponse
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 
 private val retrofit = Retrofit
@@ -37,4 +39,10 @@ interface TourAPI {
         @Header("Authorization") bearerToken: String,
         @Body body: JoinTourRequest
     ) : TourResponse
+
+    @DELETE("tour/unsubscribe/{tourID}")
+    suspend fun leaveTour(
+        @Header("Authorization") bearerToken: String,
+        @Path("tourID") tourID: Int
+    )
 }

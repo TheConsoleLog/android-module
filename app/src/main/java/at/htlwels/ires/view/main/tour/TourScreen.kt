@@ -34,7 +34,11 @@ fun TourScreen(
     when(val tourstage = viewModel.tourStage.value){
         is Resource.Ready -> {  }
         is Resource.Loading -> { ProgressIndicatorBox() }
-        is Resource.Success -> { TourDetailScreen(tourstage.data.tour) }
+        is Resource.Success -> { TourDetailScreen(
+            tour = tourstage.data.tour,
+            updateTopBar = updateTopBar,
+            reloadTourState = viewModel::fetchUserTour
+        ) }
         is Resource.Error -> {
             if(tourstage.details is HttpException && tourstage.details.code() == 404){
 
@@ -50,13 +54,17 @@ fun TourScreen(
                     NoTourScreen.Joining -> {
                         JoinTourScreen(
                             viewModel = noTourVM,
-                            onSuccess = viewModel::newTourReceived
+                            onSuccess = viewModel::newTourReceived,
+                            updateTopBar = updateTopBar,
+                            navigateBack = { noTourVM.currentScreen.value = NoTourScreen.Default }
                         )
                     }
                     NoTourScreen.Creating -> {
                         TourCreationScreen(
                             noTourVM,
-                            onSuccess = viewModel::newTourReceived
+                            onSuccess = viewModel::newTourReceived,
+                            navigateBack = { noTourVM.currentScreen.value = NoTourScreen.Default },
+                            updateTopBar = updateTopBar
                         )
                     }
                 }

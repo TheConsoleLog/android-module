@@ -73,6 +73,9 @@ dependencies {
     implementation(libs.androidx.camera.view)
     implementation(libs.androidx.camera.extensions)
 
-    //QR Codes
+    //QR Code Scanning
     implementation(libs.zxing)
+
+    //QR Code Generating
+    implementation(libs.compose.qr.code)
 }

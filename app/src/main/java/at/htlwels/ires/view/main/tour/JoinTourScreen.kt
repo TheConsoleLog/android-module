@@ -1,6 +1,8 @@
 package at.htlwels.ires.view.main.tour
 
 import android.content.pm.PackageManager
+import android.util.Size
+import android.view.ViewGroup
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
@@ -12,12 +14,19 @@ import androidx.camera.view.PreviewView
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -26,6 +35,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -39,11 +49,24 @@ import at.htlwels.ires.model.Resource
 import at.htlwels.ires.model.dto.tour.Tour
 import at.htlwels.ires.view.VerticalSpacer
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun JoinTourScreen(
     viewModel: NoTourViewModel,
-    onSuccess: (Tour) -> Unit
+    onSuccess: (Tour) -> Unit,
+    updateTopBar: (@Composable () -> Unit) -> Unit,
+    navigateBack: () -> Unit
 ){
+    updateTopBar{ TopAppBar(
+        title = {},
+        navigationIcon = { IconButton(
+            onClick = navigateBack
+        ) {
+            Icon(Icons.AutoMirrored.Default.KeyboardArrowLeft, null)
+        }}
+    )}
+
+
     val joinTourState by viewModel.joinTourState
 
     var code by remember { mutableStateOf("") }
@@ -73,18 +96,29 @@ fun JoinTourScreen(
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize().padding(24.dp)
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp)
     ) {
-        Text("QR-Code Scanner", fontSize = 32.sp, fontWeight = FontWeight.Bold)
+        Text("Scan code to join tour", fontSize = 24.sp, fontWeight = FontWeight.Bold)
 
-        VerticalSpacer(56)
+        VerticalSpacer(24)
 
         if(hasCamPermission){
             AndroidView(
                 factory = { context ->
-                    val previewView = PreviewView(context)
+
+                    //scope function for constraining the android view to the parent composables size, by default it will expand past those constraints
+                    val previewView = PreviewView(context).apply {
+                        layoutParams = ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT
+                        )
+                    }
                     val preview = Preview.Builder().build()
-                    val selector = CameraSelector.Builder().requireLensFacing(CameraSelector.LENS_FACING_BACK).build()
+                    val selector = CameraSelector.Builder()
+                        .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+                        .build()
 
                     preview.surfaceProvider = previewView.surfaceProvider
                     val imageAnalysis = ImageAnalysis
@@ -97,7 +131,7 @@ fun JoinTourScreen(
 
                     imageAnalysis.setAnalyzer(
                         ContextCompat.getMainExecutor(context),
-                        QRCodeAnalyzer{ result ->
+                        QRCodeAnalyzer { result ->
                             code = result
                         }
                     )
@@ -116,20 +150,25 @@ fun JoinTourScreen(
                     previewView
 
                 },
-                modifier = Modifier.size(270.dp)
+                modifier = Modifier.clipToBounds().height(270.dp)
             )
 
-            VerticalSpacer(56)
+
+            VerticalSpacer(32)
 
         } else {
             ErrorText("Permission for Camera not granted")
             VerticalSpacer(16)
         }
 
+        Text("or enter manually", style = MaterialTheme.typography.labelMedium)
+        VerticalSpacer(8)
+
         TextField(
-            label = { Text("Beitrittscode") },
+            label = { Text("Access Code") },
             value = code,
-            onValueChange = { code = it }
+            onValueChange = { code = it },
+            singleLine = true
         )
 
         VerticalSpacer(16)
@@ -140,21 +179,22 @@ fun JoinTourScreen(
                 CircularProgressIndicator()
             } else {
                 Button(
+                    enabled = code.isNotBlank(),
                     onClick = { viewModel.subscribeToTour(
                         code,
                         onSuccess
                     ) }
                 ) {
-                    Text("Done")
+                    Text("Join")
                 }
             }
         }
 
-        VerticalSpacer(16)
+        VerticalSpacer(12)
 
         joinTourState.let {
             if(it is Resource.Error){
-                ErrorText(it.getMessage())
+                ErrorText("error: " + it.getMessage())
             }
         }
     }
