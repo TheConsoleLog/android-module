@@ -72,8 +72,8 @@ fun TourDetailScreen(
             Text("Invite more people")
         }
 
-        val start = LocalDate.parse(tour.startDate, Constants.isoFormatter)
-        val end = LocalDate.parse(tour.endDate, Constants.isoFormatter)
+        val start = LocalDate.parse(tour.startDate, Constants.DateUtils.isoFormatter)
+        val end = LocalDate.parse(tour.endDate, Constants.DateUtils.isoFormatter)
         val now = LocalDate.now()
 
         if(start.isAfter(now)){
@@ -92,7 +92,7 @@ fun TourDetailScreen(
             Row(verticalAlignment = Alignment.CenterVertically){
                 Icon(painterResource(R.drawable.baseline_people_24), null)
                 HorizontalSpacer(8)
-                Text("${tour.participants.size} Participants")
+                //Text("${tour.participants.size} Participants")
             }
         }
     }

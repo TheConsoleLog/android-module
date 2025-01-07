@@ -1,5 +1,7 @@
 package at.htlwels.ires.common
 
+import java.time.Instant
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 object Constants {
@@ -7,6 +9,22 @@ object Constants {
     /** Shared preferences file name */
     const val SHARED_PREF_FILE = "tokens"
 
-    // Define the ISO 8601 formatter for parsing
-    val isoFormatter = DateTimeFormatter.ISO_DATE_TIME
+
+
+    object DateUtils{
+
+        // Define the ISO 8601 formatter for reading from Responses
+        val isoFormatter = DateTimeFormatter.ISO_DATE_TIME
+
+
+        fun convertMillisToDate(
+            millis: Long,
+            format: String = "yyyy-MM-dd'T'HH:mm"
+        ) : String {
+            println(millis)
+
+            val formatter = DateTimeFormatter.ofPattern(format).withZone(ZoneId.systemDefault())
+            return formatter.format(Instant.ofEpochMilli(millis))
+        }
+    }
 }

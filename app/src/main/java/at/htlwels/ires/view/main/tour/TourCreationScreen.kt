@@ -28,6 +28,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDateRangePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,14 +39,12 @@ import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import at.htlwels.bonfire.view.auth.ErrorText
+import at.htlwels.ires.common.Constants.DateUtils.convertMillisToDate
 import at.htlwels.ires.control.NoTourViewModel
 import at.htlwels.ires.model.Resource
 import at.htlwels.ires.model.dto.tour.SimpleTour
 import at.htlwels.ires.model.dto.tour.Tour
 import at.htlwels.ires.view.VerticalSpacer
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -90,7 +89,8 @@ fun TourCreationScreen(
         VerticalSpacer(16)
 
 
-        DatePickerFieldToModal()
+        val dateRange = remember { mutableStateOf<Pair<Long?, Long?>?>(null) }
+        DatePickerFieldToModal(dateRange)
 
         VerticalSpacer(32)
 
@@ -98,9 +98,13 @@ fun TourCreationScreen(
             CircularProgressIndicator()
         } else {
             Button(
+                enabled = dateRange.value != null,
                 onClick = {
+
+                    val startDate = convertMillisToDate(dateRange.value!!.first!!)
+                    val endDate = convertMillisToDate(dateRange.value!!.second!!)
                     viewModel.postNewTour(
-                        SimpleTour(nameState, descriptionState, "02.05.2025", "02.06.2025"),
+                        SimpleTour(nameState, descriptionState, startDate, endDate),
                         onSuccess
                     )
                 }
@@ -111,37 +115,84 @@ fun TourCreationScreen(
             if(it is Resource.Error) ErrorText( it.getMessage())
             println("error detected")
         }
-
     }
 }
+
+
+@Composable
+fun DatePickerFieldToModal(
+    selectedDate: MutableState<Pair<Long?, Long?>?>,
+    modifier: Modifier = Modifier
+) {
+    var showModal by remember { mutableStateOf(false) }
+
+    OutlinedTextField(
+        value = selectedDate.value
+            ?.let {
+                convertMillisToDate(
+                    millis = it.first!!,
+                    format = "MM/DD/YYYY"
+                ) + "  -  " + convertMillisToDate(
+                    millis = it.second!!,
+                    format = "MM/DD/YYYY"
+                )
+            }
+            ?: "",
+        onValueChange = { },
+        label = { Text("Choose Date Range") },
+        placeholder = { Text("MM/DD/YYYY") },
+        trailingIcon = {
+            Icon(Icons.Default.DateRange, null)
+        },
+        modifier = modifier
+            .fillMaxWidth()
+            .pointerInput(selectedDate) {
+                awaitEachGesture {
+                    // Modifier.clickable doesn't work for text fields, so we use Modifier.pointerInput
+                    // in the Initial pass to observe events before the text field consumes them
+                    // in the Main pass.
+                    awaitFirstDown(pass = PointerEventPass.Initial)
+                    val upEvent = waitForUpOrCancellation(pass = PointerEventPass.Initial)
+                    if (upEvent != null) showModal = true
+
+                }
+            }
+    )
+
+    if (showModal) {
+        DateRangePickerModal(
+            onDateRangeSelected = { selectedDate.value = it },
+            dismiss = { showModal = false }
+        )
+    }
+}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DateRangePickerModal(
     onDateRangeSelected: (Pair<Long?, Long?>) -> Unit,
-    onDismiss: () -> Unit
+    dismiss: () -> Unit
 ) {
     val dateRangePickerState = rememberDateRangePickerState()
 
     DatePickerDialog(
-        onDismissRequest = onDismiss,
+        onDismissRequest = dismiss,
         confirmButton = {
             TextButton(
                 onClick = {
-                    onDateRangeSelected(
-                        Pair(
-                            dateRangePickerState.selectedStartDateMillis,
-                            dateRangePickerState.selectedEndDateMillis
-                        )
-                    )
-                    onDismiss()
+                    onDateRangeSelected(Pair(
+                        dateRangePickerState.selectedStartDateMillis,
+                        dateRangePickerState.selectedEndDateMillis
+                    ))
+                    dismiss()
                 }
             ) {
                 Text("OK")
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancel") }
+            TextButton(onClick = dismiss) { Text("Cancel") }
         }
     ) {
         DateRangePicker(
@@ -167,43 +218,4 @@ fun DateRangePickerModal(
     }
 }
 
-@Composable
-fun DatePickerFieldToModal(modifier: Modifier = Modifier) {
-    var selectedDate by remember { mutableStateOf<Pair<Long?, Long?>?>(null) }
-    var showModal by remember { mutableStateOf(false) }
 
-    OutlinedTextField(
-        value = selectedDate?.let { convertMillisToDate(it.first!!) } ?: "",
-        onValueChange = { },
-        label = { Text("Choose Date Range") },
-        placeholder = { Text("MM/DD/YYYY") },
-        trailingIcon = {
-            Icon(Icons.Default.DateRange, null)
-        },
-        modifier = modifier
-            .fillMaxWidth()
-            .pointerInput(selectedDate) {
-                awaitEachGesture {
-                    // Modifier.clickable doesn't work for text fields, so we use Modifier.pointerInput
-                    // in the Initial pass to observe events before the text field consumes them
-                    // in the Main pass.
-                    awaitFirstDown(pass = PointerEventPass.Initial)
-                    val upEvent = waitForUpOrCancellation(pass = PointerEventPass.Initial)
-                    if (upEvent != null) showModal = true
-
-                }
-            }
-    )
-
-    if (showModal) {
-        DateRangePickerModal(
-            onDateRangeSelected = { selectedDate = it },
-            onDismiss = { showModal = false }
-        )
-    }
-}
-
-fun convertMillisToDate(millis: Long): String {
-    val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
-    return formatter.format(Date(millis))
-}
