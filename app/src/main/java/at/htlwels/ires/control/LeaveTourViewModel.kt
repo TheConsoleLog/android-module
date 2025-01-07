@@ -26,13 +26,13 @@ class LeaveTourViewModel : ViewModel() {
                     tourID = tourID
                 ) }
             )
-        }
 
-        leaveTourState.value.let {
-            if(it is Resource.Error){
-                onResult(it.getMessage())
-            } else{
-                onResult(null)
+            leaveTourState.value.let {
+                if(it is Resource.Error){
+                    onResult(it.getMessage())
+                } else{
+                    onResult(null)
+                }
             }
         }
     }
