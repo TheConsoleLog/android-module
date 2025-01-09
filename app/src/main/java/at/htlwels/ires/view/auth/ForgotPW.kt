@@ -34,9 +34,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import at.htlwels.bonfire.view.auth.BackButtonRow
-import at.htlwels.bonfire.view.auth.PasswordField
-import at.htlwels.bonfire.view.auth.RegisterField
 import at.htlwels.ires.R
 import at.htlwels.ires.control.AuthorizationViewModel
 import at.htlwels.ires.model.Resource

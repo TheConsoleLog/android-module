@@ -1,7 +1,6 @@
 package at.htlwels.ires.view.main.tour
 
 import android.content.pm.PackageManager
-import android.util.Size
 import android.view.ViewGroup
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -42,7 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
-import at.htlwels.bonfire.view.auth.ErrorText
+import at.htlwels.ires.view.auth.ErrorText
 import at.htlwels.ires.control.NoTourViewModel
 import at.htlwels.ires.control.qrcode.QRCodeAnalyzer
 import at.htlwels.ires.model.Resource

@@ -38,8 +38,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
-import at.htlwels.bonfire.view.auth.ErrorText
-import at.htlwels.ires.common.Constants.DateUtils.convertMillisToDate
+import at.htlwels.ires.view.auth.ErrorText
+import at.htlwels.ires.common.Constants.DateUtils.convertToDateString
 import at.htlwels.ires.control.NoTourViewModel
 import at.htlwels.ires.model.Resource
 import at.htlwels.ires.model.dto.tour.SimpleTour
@@ -101,8 +101,8 @@ fun TourCreationScreen(
                 enabled = dateRange.value != null,
                 onClick = {
 
-                    val startDate = convertMillisToDate(dateRange.value!!.first!!)
-                    val endDate = convertMillisToDate(dateRange.value!!.second!!)
+                    val startDate = convertToDateString(dateRange.value!!.first!!)
+                    val endDate = convertToDateString(dateRange.value!!.second!!)
                     viewModel.postNewTour(
                         SimpleTour(nameState, descriptionState, startDate, endDate),
                         onSuccess
@@ -129,10 +129,10 @@ fun DatePickerFieldToModal(
     OutlinedTextField(
         value = selectedDate.value
             ?.let {
-                convertMillisToDate(
+                convertToDateString(
                     millis = it.first!!,
                     format = "MM/DD/YYYY"
-                ) + "  -  " + convertMillisToDate(
+                ) + "  -  " + convertToDateString(
                     millis = it.second!!,
                     format = "MM/DD/YYYY"
                 )

@@ -1,7 +1,7 @@
 package at.htlwels.ires.control
 
 import androidx.compose.runtime.MutableState
-import at.htlwels.bonfire.model.jwt.TokenRepository
+import at.htlwels.ires.model.jwt.TokenRepository
 import at.htlwels.ires.model.Resource
 import at.htlwels.ires.model.api.authService
 import at.htlwels.ires.model.api.getMessage

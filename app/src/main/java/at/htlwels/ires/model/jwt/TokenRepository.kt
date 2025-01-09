@@ -1,4 +1,4 @@
-package at.htlwels.bonfire.model.jwt
+package at.htlwels.ires.model.jwt
 
 object TokenRepository {
     var refreshToken: String? = null

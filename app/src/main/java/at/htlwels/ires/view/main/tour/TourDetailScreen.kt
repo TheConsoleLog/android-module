@@ -50,6 +50,7 @@ import at.htlwels.ires.view.HorizontalSpacer
 import at.htlwels.ires.view.VerticalSpacer
 import com.lightspark.composeqr.QrCodeView
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -162,9 +163,22 @@ fun TourDetailScreen(
                             Text("#${it.location.houseNumber} ${it.location.street}")
                         }
                     }
+
+                    VerticalSpacer(8)
+
+                    val dateTime = LocalDateTime.parse(it.time, Constants.DateUtils.isoFormatter)
+
+                    Text(Constants.DateUtils.convertToDateString(dateTime))
+
                 }
             }
             VerticalSpacer(8)
+        }
+
+        this.item {
+            repeat(29){
+                Text("ABC")
+            }
         }
     }
 

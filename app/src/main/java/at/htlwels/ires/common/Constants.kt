@@ -1,6 +1,7 @@
 package at.htlwels.ires.common
 
 import java.time.Instant
+import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
@@ -17,7 +18,7 @@ object Constants {
         val isoFormatter = DateTimeFormatter.ISO_DATE_TIME
 
 
-        fun convertMillisToDate(
+        fun convertToDateString(
             millis: Long,
             format: String = "yyyy-MM-dd'T'HH:mm"
         ) : String {
@@ -25,6 +26,13 @@ object Constants {
 
             val formatter = DateTimeFormatter.ofPattern(format).withZone(ZoneId.systemDefault())
             return formatter.format(Instant.ofEpochMilli(millis))
+        }
+
+        fun convertToDateString(
+            dateTime: LocalDateTime,
+            formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy - HH:mm").withZone(ZoneId.systemDefault())
+        ) : String {
+            return dateTime.format(formatter)
         }
     }
 }

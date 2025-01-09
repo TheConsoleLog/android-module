@@ -5,7 +5,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import at.htlwels.bonfire.model.jwt.TokenRepository
+import at.htlwels.ires.model.jwt.TokenRepository
 import at.htlwels.ires.model.Resource
 import at.htlwels.ires.model.api.tourService
 import at.htlwels.ires.model.dto.tour.JoinTourRequest

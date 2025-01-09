@@ -8,8 +8,8 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import at.htlwels.bonfire.model.jwt.TokenRepository
-import at.htlwels.bonfire.model.jwt.TokenType
+import at.htlwels.ires.model.jwt.TokenRepository
+import at.htlwels.ires.model.jwt.TokenType
 import at.htlwels.ires.common.Constants
 import at.htlwels.ires.model.Resource
 import at.htlwels.ires.model.api.authService

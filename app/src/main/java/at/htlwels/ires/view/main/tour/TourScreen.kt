@@ -6,7 +6,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
-import at.htlwels.bonfire.view.auth.ErrorText
+import at.htlwels.ires.view.auth.ErrorText
 import at.htlwels.ires.control.NoTourScreen
 import at.htlwels.ires.control.NoTourViewModel
 import at.htlwels.ires.control.TourViewModel

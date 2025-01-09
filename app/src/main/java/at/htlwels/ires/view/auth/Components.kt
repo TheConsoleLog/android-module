@@ -1,4 +1,4 @@
-package at.htlwels.bonfire.view.auth
+package at.htlwels.ires.view.auth
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement

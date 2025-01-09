@@ -1,7 +1,6 @@
 package at.htlwels.ires.model.jwt
 
 import android.content.SharedPreferences
-import at.htlwels.bonfire.model.jwt.TokenType
 
 fun SharedPreferences.storeTokens(
     refresh: String? = null,
