@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import at.htlwels.ires.control.CreateCheckpointViewModel
 import at.htlwels.ires.view.HorizontalSpacer
+import at.htlwels.ires.view.TimerPickerModal
 import at.htlwels.ires.view.VerticalSpacer
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -115,7 +116,7 @@ fun CreateCheckpointScreen(
 
         at.htlwels.ires.view.DatePickerFieldToModal(selectedDate = date)
 
-
+        TimerPickerModal() //TODO TODO TODO
 
     }
 }
