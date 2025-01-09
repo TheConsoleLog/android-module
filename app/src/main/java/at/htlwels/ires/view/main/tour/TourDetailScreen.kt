@@ -1,5 +1,7 @@
 package at.htlwels.ires.view.main.tour
 
+import android.content.Intent
+import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -82,8 +84,6 @@ fun TourDetailScreen(
                         HorizontalSpacer(8)
                         Text(tour.description)
                     }
-
-
                 }
 
                 VerticalSpacer(16)
@@ -141,8 +141,20 @@ fun TourDetailScreen(
                     Text(it.name, fontWeight = FontWeight.Bold)
                     Text(it.description)
                     VerticalSpacer(4)
+
+                    val context = LocalContext.current
                     OutlinedButton(
-                        onClick = {}
+                        onClick = {
+                            val encodedLocation = it.location.run {
+                                Uri.encode("$street $houseNumber, $postCode $city")
+                            }
+                            val gmmIntentUri = Uri.parse("geo:0,0?q=$encodedLocation")
+
+                            Intent(Intent.ACTION_VIEW, gmmIntentUri).let {
+                                it.setPackage("com.google.android.apps.maps")
+                                context.startActivity(it)
+                            }
+                        }
                     ) {
                         Row (verticalAlignment = Alignment.CenterVertically) {
                             Icon(Icons.Default.LocationOn, null)
@@ -150,9 +162,9 @@ fun TourDetailScreen(
                             Text("#${it.location.houseNumber} ${it.location.street}")
                         }
                     }
-
                 }
             }
+            VerticalSpacer(8)
         }
     }
 
@@ -226,7 +238,7 @@ fun TourDetailScreen(
                 }
             },
             icon = { Icon(painterResource(R.drawable.baseline_logout_24), null)},
-            title = { Text("Leave tour?")}
+            title = { Text("Leave tour?") }
         )
     }
 }
