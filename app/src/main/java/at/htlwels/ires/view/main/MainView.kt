@@ -26,6 +26,7 @@ import androidx.navigation.toRoute
 import at.htlwels.ires.control.MainViewModel
 import at.htlwels.ires.view.Routes
 import at.htlwels.ires.view.main.gallery.GalleryCameraPager
+import at.htlwels.ires.view.main.tour.CreateCheckpointScreen
 import at.htlwels.ires.view.main.tour.TourScreen
 
 @Composable
@@ -97,6 +98,7 @@ private fun MainBottomBar(
  *
  * See: [Type Safe Navigation with Compose Library](https://developer.android.com/jetpack/androidx/releases/navigation#2.8.0)
  */
+
 @Composable
 fun MainScreenNavigator(
     navController: NavHostController,
@@ -104,6 +106,7 @@ fun MainScreenNavigator(
     logout: () -> Unit,
     updateTopBar: (@Composable () -> Unit) -> Unit
 ){
+
     NavHost(
         navController = navController,
         startDestination = Routes.Main.TourScreen,
@@ -113,7 +116,19 @@ fun MainScreenNavigator(
         composable <Routes.Main.TourScreen> {
             TourScreen(
                 viewModel = viewModel(),
-                updateTopBar
+                updateTopBar = updateTopBar,
+                navTo = { navController.navigate(it) }
+            )
+        }
+
+        composable<Routes.Main.TourScreen.CreateCheckPoint> {
+            val args = it.toRoute<Routes.Main.TourScreen.CreateCheckPoint>()
+
+            CreateCheckpointScreen(
+                tourID = args.tourID,
+                viewModel = viewModel(),
+                updateTopBar = updateTopBar,
+                navBack = navController::popBackStack
             )
         }
 

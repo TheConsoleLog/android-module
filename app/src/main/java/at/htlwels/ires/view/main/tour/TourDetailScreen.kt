@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.AlertDialog
@@ -47,6 +48,7 @@ import at.htlwels.ires.common.Constants
 import at.htlwels.ires.control.LeaveTourViewModel
 import at.htlwels.ires.model.dto.tour.Tour
 import at.htlwels.ires.view.HorizontalSpacer
+import at.htlwels.ires.view.Routes
 import at.htlwels.ires.view.VerticalSpacer
 import com.lightspark.composeqr.QrCodeView
 import java.time.LocalDate
@@ -58,7 +60,8 @@ import java.time.temporal.ChronoUnit
 fun TourDetailScreen(
     updateTopBar: (@Composable () -> Unit) -> Unit,
     tour: Tour,
-    reloadTourState: () -> Unit
+    reloadTourState: () -> Unit,
+    navTo: (Routes) -> Unit
 ){
 
     var showLeaveTourDialog by remember { mutableStateOf(false) }
@@ -129,8 +132,18 @@ fun TourDetailScreen(
         }
 
         this.stickyHeader {
-            Text("Next Program Items", style = MaterialTheme.typography.headlineSmall)
-            VerticalSpacer(16)
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Next Program Items", style = MaterialTheme.typography.headlineSmall)
+                IconButton(
+                    onClick = { navTo(Routes.Main.TourScreen.CreateCheckPoint(tour.tId)) }
+                ) {
+                    Icon(Icons.Default.Add, null)
+                }
+            }
         }
 
         this.items(tour.checkpoints){

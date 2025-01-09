@@ -1,5 +1,6 @@
 package at.htlwels.ires.model.api
 
+import at.htlwels.ires.model.dto.tour.CreateCheckpointRequest
 import at.htlwels.ires.model.dto.tour.JoinTourRequest
 import at.htlwels.ires.model.dto.tour.SimpleTour
 import at.htlwels.ires.model.dto.tour.Tour
@@ -44,5 +45,11 @@ interface TourAPI {
     suspend fun leaveTour(
         @Header("Authorization") bearerToken: String,
         @Path("tourID") tourID: Int
+    )
+
+    @POST("tour/checkpoint")
+    suspend fun createCheckpoint(
+        @Header("Authorization") bearerToken: String,
+        @Body body: CreateCheckpointRequest
     )
 }

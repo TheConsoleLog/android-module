@@ -11,7 +11,9 @@ sealed interface Routes{
     sealed class Main(val name: String, @DrawableRes val icon : Int) : Routes {
 
         @Serializable
-        data object TourScreen: Main("Tour", R.drawable.baseline_landscape_24)
+        data object TourScreen: Main("Tour", R.drawable.baseline_landscape_24) {
+            @Serializable data class CreateCheckPoint(val tourID: Int) : Routes
+        }
         @Serializable
         data object ActivitiesScreen: Main("Activities", R.drawable.baseline_attractions_24)
         @Serializable

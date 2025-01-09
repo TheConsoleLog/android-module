@@ -6,19 +6,21 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
-import at.htlwels.ires.view.auth.ErrorText
 import at.htlwels.ires.control.NoTourScreen
 import at.htlwels.ires.control.NoTourViewModel
 import at.htlwels.ires.control.TourViewModel
 import at.htlwels.ires.model.Resource
 import at.htlwels.ires.view.ProgressIndicatorBox
+import at.htlwels.ires.view.auth.ErrorText
 import retrofit2.HttpException
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TourScreen(
     viewModel: TourViewModel,
-    updateTopBar: (@Composable () -> Unit) -> Unit
+    updateTopBar: (@Composable () -> Unit) -> Unit,
+    navTo: (Any) -> Unit
 ){
 
     updateTopBar { TopAppBar(
@@ -37,7 +39,8 @@ fun TourScreen(
         is Resource.Success -> { TourDetailScreen(
             tour = tourstage.data.tour,
             updateTopBar = updateTopBar,
-            reloadTourState = viewModel::fetchUserTour
+            reloadTourState = viewModel::fetchUserTour,
+            navTo = navTo
         ) }
         is Resource.Error -> {
             if(tourstage.details is HttpException && tourstage.details.code() == 404){

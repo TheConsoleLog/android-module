@@ -1,6 +1,9 @@
 package at.htlwels.ires.model.dto.tour
 
+
+
 data class Checkpoint(
+    val cId: Int? = null,
     val description: String,
     val isMeetingPoint: Boolean,
     val location: Location,
@@ -8,6 +11,7 @@ data class Checkpoint(
     val time: String,
     val tourId: Int
 )
+
 
 
 data class Location(
@@ -21,3 +25,9 @@ data class Location(
     val routeDescription: Any,
     val street: String
 )
+
+
+data class CreateCheckpointRequest(
+    val checkpoint: Checkpoint
+)
+

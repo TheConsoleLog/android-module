@@ -31,8 +31,6 @@ object Constants {
         fun convertToDateString(
             dateTime: LocalDateTime,
             formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy - HH:mm").withZone(ZoneId.systemDefault())
-        ) : String {
-            return dateTime.format(formatter)
-        }
+        ) : String = dateTime.format(formatter)
     }
 }
