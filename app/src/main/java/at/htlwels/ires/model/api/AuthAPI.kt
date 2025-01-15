@@ -7,12 +7,14 @@ import at.htlwels.ires.model.dto.auth.RenewRequest
 import at.htlwels.ires.model.dto.auth.ResetPasswordRequest
 import at.htlwels.ires.model.dto.auth.SignupRequest
 import at.htlwels.ires.model.dto.auth.TokenRenewResponse
+import at.htlwels.ires.model.dto.profile.Profile
 import com.google.gson.Gson
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Path
 
@@ -43,6 +45,9 @@ interface AuthAPI {
 
     @POST("auth/reset")
     suspend fun resetPassword(@Body body: ResetPasswordRequest)
+
+    @GET("auth/profile")
+    suspend fun fetchProfile(@Header("Authorization") bearerToken: String) : Profile
 }
 
 fun HttpException.getMessage() = Gson().fromJson(response()?.errorBody()?.string(), CustomHTTPError::class.java).message

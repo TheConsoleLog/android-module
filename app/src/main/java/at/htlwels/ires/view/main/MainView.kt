@@ -26,8 +26,9 @@ import androidx.navigation.toRoute
 import at.htlwels.ires.control.MainViewModel
 import at.htlwels.ires.view.Routes
 import at.htlwels.ires.view.main.gallery.GalleryCameraPager
-import at.htlwels.ires.view.main.tour.ceckpoints.CreateCheckpointScreen
+import at.htlwels.ires.view.main.profile.ProfileScreen
 import at.htlwels.ires.view.main.tour.TourScreen
+import at.htlwels.ires.view.main.tour.ceckpoints.CreateCheckpointScreen
 
 @Composable
 fun MainScaffold(logout: () -> Unit){
@@ -141,13 +142,15 @@ fun MainScreenNavigator(
         }
 
         composable<Routes.Main.ProfileScreen>{
-
+            ProfileScreen(
+                viewModel = viewModel(),
+                updateTopBar = updateTopBar,
+                logout = logout,
+                navTo = navController::navigate
+            )
         }
 
-        composable<Routes.EventDetailScreen>{
-            val args = it.toRoute<Routes.EventDetailScreen>()
 
-        }
     }
 }
 

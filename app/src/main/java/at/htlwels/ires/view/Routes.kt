@@ -42,8 +42,7 @@ sealed interface Routes{
     //----------Screens that can be reached from multiple Destinations--------------
     //------------------------------------------------------------------------------
 
-    @Serializable
-    data class EventDetailScreen(val id: Int) : Routes
+
 }
 
 
