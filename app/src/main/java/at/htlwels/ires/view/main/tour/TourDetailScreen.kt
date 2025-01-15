@@ -16,6 +16,8 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -58,6 +60,7 @@ fun TourDetailScreen(
 
     var showLeaveTourDialog by remember { mutableStateOf(false) }
     var showAccessCodeDialog by remember { mutableStateOf(false) }
+    var showUserDialog by remember { mutableStateOf(false) }
     var checkPointToDelete by remember { mutableStateOf<Int?>(null) }
 
     updateTopBar{
@@ -90,7 +93,7 @@ fun TourDetailScreen(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     TextButton(
-                        onClick = {}
+                        onClick = { showUserDialog = true }
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically){
                             Icon(painterResource(R.drawable.baseline_people_24), null)
@@ -207,6 +210,27 @@ fun TourDetailScreen(
             tourID = tour.tId,
             reloadTourState = reloadTourState
         )
+    }
+
+    if(showUserDialog){
+         AlertDialog(
+             confirmButton = {},
+             dismissButton = { OutlinedButton(
+                 onClick = { showUserDialog = false }
+             ) { Text("Back") }},
+             onDismissRequest = { showUserDialog = false },
+             icon = { Icon(Icons.Default.Person, null)},
+             title = { Text("Participating Users")},
+             text = {
+                 LazyColumn {
+                     this.items(tour.participants){
+                         Card (modifier = Modifier.fillMaxWidth().padding(8.dp)) {
+                             Text(it.userName)
+                         }
+                     }
+                 }
+             }
+         )
     }
 
     checkPointToDelete?.let {
