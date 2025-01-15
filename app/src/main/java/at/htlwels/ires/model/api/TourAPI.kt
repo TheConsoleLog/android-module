@@ -52,4 +52,10 @@ interface TourAPI {
         @Header("Authorization") bearerToken: String,
         @Body body: Checkpoint
     )
+
+    @DELETE("checkpoint/{checkpointID}")
+    suspend fun deleteCheckpoint(
+        @Header("Authorization") bearerToken: String,
+        @Path("checkpointID") checkpointID: Int
+    )
 }
