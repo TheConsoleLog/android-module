@@ -90,7 +90,7 @@ fun TourCreationScreen(
 
 
         val dateRange = remember { mutableStateOf<Pair<Long?, Long?>?>(null) }
-        DatePickerFieldToModal(dateRange)
+        DateRangePickerFieldToModal(dateRange)
 
         VerticalSpacer(32)
 
@@ -120,7 +120,7 @@ fun TourCreationScreen(
 
 
 @Composable
-fun DatePickerFieldToModal(
+fun DateRangePickerFieldToModal(
     selectedDate: MutableState<Pair<Long?, Long?>?>,
     modifier: Modifier = Modifier
 ) {

@@ -135,13 +135,16 @@ fun TourDetailScreen(
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface)
             ) {
                 Text("Next Program Items", style = MaterialTheme.typography.headlineSmall)
-                IconButton(
-                    onClick = { navTo(Routes.Main.TourScreen.CreateCheckPoint(tour.tId)) }
-                ) {
-                    Icon(Icons.Default.Add, null)
+
+                if(tour.isTourGuide){
+                    IconButton(
+                        onClick = { navTo(Routes.Main.TourScreen.CreateCheckPoint(tour.tId)) }
+                    ) {
+                        Icon(Icons.Default.Add, null)
+                    }
                 }
             }
         }
@@ -184,13 +187,6 @@ fun TourDetailScreen(
                     Text(Constants.DateUtils.convertToDateString(dateTime))
 
                 }
-            }
-            VerticalSpacer(8)
-        }
-
-        this.item {
-            repeat(29){
-                Text("ABC")
             }
         }
     }

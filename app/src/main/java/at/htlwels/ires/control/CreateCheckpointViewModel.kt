@@ -6,14 +6,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import at.htlwels.ires.model.Resource
 import at.htlwels.ires.model.api.tourService
-import at.htlwels.ires.model.dto.tour.CreateCheckpointRequest
+import at.htlwels.ires.model.dto.tour.Checkpoint
 import at.htlwels.ires.model.jwt.TokenRepository
 import kotlinx.coroutines.launch
 
 class CreateCheckpointViewModel : ViewModel() {
 
     fun post(
-        checkPoint: CreateCheckpointRequest,
+        checkPoint: Checkpoint,
         onResult: (errorMessage: String?) -> Unit
     ){
 

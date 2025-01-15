@@ -26,7 +26,7 @@ import androidx.navigation.toRoute
 import at.htlwels.ires.control.MainViewModel
 import at.htlwels.ires.view.Routes
 import at.htlwels.ires.view.main.gallery.GalleryCameraPager
-import at.htlwels.ires.view.main.tour.CreateCheckpointScreen
+import at.htlwels.ires.view.main.tour.ceckpoints.CreateCheckpointScreen
 import at.htlwels.ires.view.main.tour.TourScreen
 
 @Composable

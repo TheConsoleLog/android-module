@@ -5,7 +5,6 @@ import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Face
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -24,6 +22,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -41,11 +40,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import at.htlwels.ires.R
 import java.text.SimpleDateFormat
-import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -95,6 +95,37 @@ fun DividerWithText(text: String){
     }
 }
 
+@Composable
+fun ClickableTextField(
+    modifier: Modifier = Modifier,
+    showDialog: () -> Unit,
+    text: String,
+    pointerInput: Any?,
+    label: String? = null,
+    trailingIcon: (@Composable () -> Unit)? = null
+){
+    OutlinedTextField(
+        value = text,
+        onValueChange = { },
+        label = { label?.let{ Text(it) } },
+        trailingIcon = trailingIcon,
+        modifier = modifier
+            .fillMaxWidth()
+            .pointerInput(pointerInput) {
+                awaitEachGesture {
+                    // Modifier.clickable doesn't work for text fields, so we use Modifier.pointerInput
+                    // in the Initial pass to observe events before the text field consumes them
+                    // in the Main pass.
+                    awaitFirstDown(pass = PointerEventPass.Initial)
+                    val upEvent = waitForUpOrCancellation(pass = PointerEventPass.Initial)
+                    if (upEvent != null) {
+                        showDialog()
+                    }
+                }
+            }
+    )
+}
+
 
 @Composable
 fun DatePickerFieldToModal(
@@ -103,32 +134,18 @@ fun DatePickerFieldToModal(
 ) {
     var showModal by remember { mutableStateOf(false) }
 
-    OutlinedTextField(
-        value = selectedDate.value?.let { convertMillisToDate(it) } ?: "",
-        onValueChange = { },
-        label = { Text("DOB") },
-        placeholder = { Text("MM/DD/YYYY") },
+    ClickableTextField(
+        showDialog = { showModal = true },
+        text = selectedDate.value?.let { convertMillisToDate(it) } ?: "",
+        pointerInput = selectedDate.value,
+        label = "Date",
         trailingIcon = {
-            Icon(Icons.Default.DateRange, contentDescription = "Select date")
-        },
-        modifier = modifier
-            .fillMaxWidth()
-            .pointerInput(selectedDate) {
-                awaitEachGesture {
-                    // Modifier.clickable doesn't work for text fields, so we use Modifier.pointerInput
-                    // in the Initial pass to observe events before the text field consumes them
-                    // in the Main pass.
-                    awaitFirstDown(pass = PointerEventPass.Initial)
-                    val upEvent = waitForUpOrCancellation(pass = PointerEventPass.Initial)
-                    if (upEvent != null) {
-                        showModal = true
-                    }
-                }
-            }
+            Icon(Icons.Default.DateRange, null)
+        }
     )
 
     if (showModal) {
-        DatePickerModal(
+        SimpleDatePickerDialog(
             onDateSelected = { selectedDate.value = it },
             onDismiss = { showModal = false }
         )
@@ -138,7 +155,7 @@ fun DatePickerFieldToModal(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DatePickerModal(
+fun SimpleDatePickerDialog(
     onDateSelected: (Long?) -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -172,84 +189,47 @@ fun convertMillisToDate(millis: Long): String {
 
 
 
+/** TimePicker TextField and Dialog */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DialWithDialogExample(
-    onConfirm: (TimePickerState) -> Unit,
-    onDismiss: () -> Unit,
-) {
-    val currentTime = Calendar.getInstance()
+fun TimerPickerModal(
+    onDone: (TimePickerState) -> Unit
+){
+    var showDialog by remember { mutableStateOf(false) }
 
-    val timePickerState = rememberTimePickerState(
-        initialHour = currentTime.get(Calendar.HOUR_OF_DAY),
-        initialMinute = currentTime.get(Calendar.MINUTE),
-        is24Hour = true,
+    val timePickerState = rememberTimePickerState()
+
+    ClickableTextField(
+        showDialog = { showDialog = true },
+        text = String.format(Locale.getDefault(),"%02d:%02d", timePickerState.hour, timePickerState.minute),
+        pointerInput = timePickerState,
+        trailingIcon = { Icon(
+            painterResource(R.drawable.baseline_access_time_filled_24), null
+        ) },
+        label = "Time"
     )
 
-    TimePickerDialog(
-        onDismiss = { onDismiss() },
-        onConfirm = { onConfirm(timePickerState) }
-    ) {
-        TimePicker(
-            state = timePickerState,
-        )
-    }
-}
+    if (showDialog) {
 
-@Composable
-fun TimePickerDialog(
-    onDismiss: () -> Unit,
-    onConfirm: () -> Unit,
-    content: @Composable () -> Unit
-) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        dismissButton = {
-            TextButton(onClick = { onDismiss() }) {
-                Text("Dismiss")
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = { onConfirm() }) {
-                Text("OK")
-            }
-        },
-        text = { content() }
-    )
-}
-
-@Composable
-fun TimerPickerModal(){
-    var showModal by remember { mutableStateOf(false) }
-
-    OutlinedTextField(
-        value = selectedDate.value?.let { convertMillisToDate(it) } ?: "",
-        onValueChange = { },
-        label = { Text("DOB") },
-        placeholder = { Text("MM/DD/YYYY") },
-        trailingIcon = {
-            Icon(Icons.Default.Face, null)
-        },
-        modifier = Modifier
-            .fillMaxWidth()
-            .pointerInput(selectedDate) {
-                awaitEachGesture {
-                    // Modifier.clickable doesn't work for text fields, so we use Modifier.pointerInput
-                    // in the Initial pass to observe events before the text field consumes them
-                    // in the Main pass.
-                    awaitFirstDown(pass = PointerEventPass.Initial)
-                    val upEvent = waitForUpOrCancellation(pass = PointerEventPass.Initial)
-                    if (upEvent != null) {
-                        showModal = true
-                    }
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            dismissButton = {
+                OutlinedButton(onClick = { showDialog = false }) {
+                    Text("Cancel")
                 }
+            },
+            confirmButton = {
+                Button(onClick = {
+                    onDone(timePickerState)
+                    showDialog = false
+                }) {
+                    Text("Confirm")
+                }
+            },
+            text = {
+                TimePicker(state = timePickerState)
             }
-    )
-
-    if (showModal) {
-        DialWithDialogExample(
-            onConfirm = { selectedDate.value = it. },
-            onDismiss = { showModal = false }
         )
     }
 }
+
