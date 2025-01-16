@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardActionScope
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
@@ -24,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -38,9 +41,15 @@ fun RegisterField(
     label: String,
     keyboardType: KeyboardType? = null,
     icon: @Composable () -> Unit,
+    onImeAction: KeyboardActionScope.() -> Unit = {}
 ){
     OutlinedTextField(
-        keyboardOptions = keyboardType?.let { KeyboardOptions(keyboardType = it) } ?: KeyboardOptions.Default,
+        keyboardOptions = keyboardType?.let {
+            KeyboardOptions(
+                keyboardType = it,
+                imeAction = ImeAction.Next
+            )
+        } ?: KeyboardOptions(imeAction = ImeAction.Next),
         singleLine = true,
         leadingIcon = icon,
         label = { Text(label) },
@@ -50,7 +59,8 @@ fun RegisterField(
             text.value = it
             resetError()
             println("jo sicha")
-        }
+        },
+        keyboardActions = KeyboardActions(onNext = onImeAction),
     )
 }
 
@@ -58,7 +68,8 @@ fun RegisterField(
 @Composable
 fun PasswordField(
     password: MutableState<String>,
-    resetError: () -> Unit = {}
+    resetError: () -> Unit = {},
+    onImeAction: KeyboardActionScope.() -> Unit
 ) {
 
     var pwVisible by remember { mutableStateOf(false) }
@@ -78,7 +89,8 @@ fun PasswordField(
         label = { Text("Passwort") },
         value = password.value,
         onValueChange = { password.value = it; resetError() },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
+        keyboardActions = KeyboardActions(onDone = onImeAction),
         visualTransformation =
         if(pwVisible) VisualTransformation.None
         else PasswordVisualTransformation() 

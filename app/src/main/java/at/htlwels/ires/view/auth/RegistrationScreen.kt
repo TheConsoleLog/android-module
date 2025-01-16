@@ -25,7 +25,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
@@ -104,11 +106,14 @@ fun RegisterScreen(
                         Text("Registrieren", fontWeight = FontWeight.Bold, fontSize = 24.sp)
                         VerticalSpacer(32)
 
+                        val focusManger = LocalFocusManager.current
+
                         RegisterField(
                             icon = { Icon(Icons.Default.Star, null) },
                             text = userName,
                             label = "Benutzername",
-                            resetError = authModel::resetSignupState
+                            resetError = authModel::resetSignupState,
+                            onImeAction = { focusManger.moveFocus(FocusDirection.Down) }
                         )
                         VerticalSpacer(8)
 
@@ -116,7 +121,8 @@ fun RegisterScreen(
                             icon = { Icon(Icons.Default.Person, null) },
                             text = firstName,
                             label = "Vorname",
-                            resetError = authModel::resetSignupState
+                            resetError = authModel::resetSignupState,
+                            onImeAction = { focusManger.moveFocus(FocusDirection.Down) }
                         )
                         VerticalSpacer(8)
                         RegisterField(
@@ -124,10 +130,15 @@ fun RegisterScreen(
                             text = email,
                             label = "Email",
                             keyboardType = KeyboardType.Email,
-                            resetError = authModel::resetSignupState
+                            resetError = authModel::resetSignupState,
+                            onImeAction = { focusManger.moveFocus(FocusDirection.Down) }
                         )
                         VerticalSpacer(8)
-                        PasswordField(password, resetError = authModel::resetSignupState)
+                        PasswordField(
+                            password = password,
+                            resetError = authModel::resetSignupState,
+                            onImeAction = { focusManger.clearFocus() }
+                        )
 
                         VerticalSpacer(32)
 
