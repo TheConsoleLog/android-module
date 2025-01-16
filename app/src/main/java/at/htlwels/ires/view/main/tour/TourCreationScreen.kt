@@ -28,6 +28,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDateRangePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -55,12 +56,15 @@ fun TourCreationScreen(
     navigateBack: () -> Unit
 ){
 
-    updateTopBar{ TopAppBar(
-        title = {},
-        navigationIcon = { IconButton(onClick = navigateBack) {
-            Icon(Icons.AutoMirrored.Default.KeyboardArrowLeft, null)
-        } }
-    ) }
+    LaunchedEffect(Unit) {
+        updateTopBar{ TopAppBar(
+            title = {},
+            navigationIcon = { IconButton(onClick = navigateBack) {
+                Icon(Icons.AutoMirrored.Default.KeyboardArrowLeft, null)
+            } }
+        ) }
+    }
+
 
     var nameState by remember { mutableStateOf("") }
     var descriptionState by remember { mutableStateOf("") }

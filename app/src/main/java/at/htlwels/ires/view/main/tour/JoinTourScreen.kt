@@ -56,14 +56,16 @@ fun JoinTourScreen(
     updateTopBar: (@Composable () -> Unit) -> Unit,
     navigateBack: () -> Unit
 ){
-    updateTopBar{ TopAppBar(
-        title = {},
-        navigationIcon = { IconButton(
-            onClick = navigateBack
-        ) {
-            Icon(Icons.AutoMirrored.Default.KeyboardArrowLeft, null)
-        }}
-    )}
+    LaunchedEffect(Unit) {
+        updateTopBar{ TopAppBar(
+            title = {},
+            navigationIcon = { IconButton(
+                onClick = navigateBack
+            ) {
+                Icon(Icons.AutoMirrored.Default.KeyboardArrowLeft, null)
+            }}
+        )}
+    }
 
 
     val joinTourState by viewModel.joinTourState

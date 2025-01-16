@@ -2,7 +2,7 @@ package at.htlwels.ires.model.dto.profile
 
 data class Profile(
     val aId: Int,
-    val activeOrNextTour: ActiveOrNextTour,
+    val activeOrNextTour: ActiveOrNextTour?,
     val email: String,
     val firstName: String,
     val lastName: String,

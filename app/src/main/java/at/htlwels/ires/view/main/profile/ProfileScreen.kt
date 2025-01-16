@@ -224,7 +224,7 @@ fun ProfileScreen(
                                                     TextButton(
                                                         onClick = { navTo(Routes.Main.TourScreen) }
                                                     ) {
-                                                        Text(profile.activeOrNextTour.name)
+                                                        Text(profile.activeOrNextTour?.name ?: "No active tour")
                                                     }
                                                 }
                                             }

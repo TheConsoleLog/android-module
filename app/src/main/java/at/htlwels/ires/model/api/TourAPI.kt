@@ -24,7 +24,7 @@ private val retrofit = Retrofit
 val tourService: TourAPI = retrofit.create(TourAPI::class.java)
 
 
-interface TourAPI {
+sealed interface TourAPI {
 
     @POST("tour")
     suspend fun createTour(
@@ -35,17 +35,19 @@ interface TourAPI {
     @GET("tour")
     suspend fun getUserTour(@Header("Authorization") bearerToken: String) : TourResponse
 
+    @DELETE("tour/unsubscribe/{tourID}")
+    suspend fun leaveTour(
+        @Header("Authorization") bearerToken: String,
+        @Path("tourID") tourID: Int
+    )
+
     @POST("tour/subscribe")
     suspend fun joinTour(
         @Header("Authorization") bearerToken: String,
         @Body body: JoinTourRequest
     ) : TourResponse
 
-    @DELETE("tour/unsubscribe/{tourID}")
-    suspend fun leaveTour(
-        @Header("Authorization") bearerToken: String,
-        @Path("tourID") tourID: Int
-    )
+
 
     @POST("checkpoint")
     suspend fun createCheckpoint(

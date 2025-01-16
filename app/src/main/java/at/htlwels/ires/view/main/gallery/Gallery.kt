@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Tab
@@ -29,35 +30,47 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import kotlinx.coroutines.launch
 
 
 @Composable
-fun GalleryCameraPager(){
+fun GalleryCameraPager(
+    updateTopBar: (@Composable () -> Unit) -> Unit
+){
 
     val tabs = listOf("Camera", "Gallery")
     val pagerState = rememberPagerState { 2 }
     val pagerScrollScope = rememberCoroutineScope()
 
-    Column (modifier = Modifier.fillMaxSize()) {
-        TabRow(
-            selectedTabIndex = pagerState.currentPage,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            tabs.forEachIndexed { index, title ->
-                Tab(
-                    selected = pagerState.currentPage == index,
-                    onClick = {
-                        pagerScrollScope.launch {
-                            pagerState.animateScrollToPage(index)
-                        }
-                    },
-                    text = { Text(title) }
-                )
+    LaunchedEffect(Unit) {
+        updateTopBar{
+
+            TabRow(
+                selectedTabIndex = pagerState.currentPage,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                tabs.forEachIndexed { index, title ->
+                    Tab(
+                        modifier = Modifier.padding(top = 40.dp),
+                        selected = pagerState.currentPage == index,
+                        onClick = {
+                            pagerScrollScope.launch {
+                                pagerState.animateScrollToPage(index)
+                            }
+                        },
+                        text = { Text(title) }
+                    )
+                }
             }
         }
+    }
+
+
+    Column (modifier = Modifier.fillMaxSize()) {
+
 
         HorizontalPager(state = pagerState) { page ->
 
@@ -123,8 +136,7 @@ fun CameraScreen() {
         CameraPreview(
             controller.apply {
                 setEnabledUseCases(
-                    CameraController.IMAGE_CAPTURE or
-                            CameraController.VIDEO_CAPTURE
+                    CameraController.IMAGE_CAPTURE or CameraController.VIDEO_CAPTURE
                 )
             },
             modifier = Modifier.fillMaxSize()

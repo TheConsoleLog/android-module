@@ -8,6 +8,19 @@ import kotlinx.serialization.Serializable
 sealed interface Routes{
 
     @Serializable
+    sealed class Authorization : Routes {
+
+        @Serializable
+        data object LoginScreen: Authorization()
+        @Serializable
+        data class RegisterScreen(val username: String, val password: String): Authorization()
+        @Serializable
+        data object ForgotPWScreen: Authorization()
+        @Serializable
+        data object Authorized: Authorization()
+    }
+
+    @Serializable
     sealed class Main(val name: String, @DrawableRes val icon : Int) : Routes {
 
         @Serializable
@@ -23,18 +36,7 @@ sealed interface Routes{
     }
 
 
-    @Serializable
-    sealed class Authorization : Routes {
 
-        @Serializable
-        data object LoginScreen: Authorization()
-        @Serializable
-        data class RegisterScreen(val username: String, val password: String): Authorization()
-        @Serializable
-        data object ForgotPWScreen: Authorization()
-        @Serializable
-        data object Authorized: Authorization()
-    }
 
 
 

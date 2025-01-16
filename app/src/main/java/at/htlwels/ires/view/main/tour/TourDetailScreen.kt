@@ -28,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -63,16 +64,19 @@ fun TourDetailScreen(
     var showUserDialog by remember { mutableStateOf(false) }
     var checkPointToDelete by remember { mutableStateOf<Int?>(null) }
 
-    updateTopBar{
-        TopAppBar(
-            title = { Text(tour.name) },
-            actions = { IconButton(
-                onClick = { showLeaveTourDialog = true }
-            ){
-                Icon(painterResource(R.drawable.baseline_logout_24), null)
-            }}
-        )
+    LaunchedEffect(Unit) {
+        updateTopBar{
+            TopAppBar(
+                title = { Text(tour.name) },
+                actions = { IconButton(
+                    onClick = { showLeaveTourDialog = true }
+                ){
+                    Icon(painterResource(R.drawable.baseline_logout_24), null)
+                }}
+            )
+        }
     }
+
 
     LazyColumn (modifier = Modifier.padding(horizontal = 16.dp)) {
         this.item {
@@ -220,7 +224,7 @@ fun TourDetailScreen(
              ) { Text("Back") }},
              onDismissRequest = { showUserDialog = false },
              icon = { Icon(Icons.Default.Person, null)},
-             title = { Text("Participating Users")},
+             title = { Text("Participating Users") },
              text = {
                  LazyColumn {
                      this.items(tour.participants){

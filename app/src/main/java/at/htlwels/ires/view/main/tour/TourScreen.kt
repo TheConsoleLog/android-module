@@ -11,6 +11,7 @@ import at.htlwels.ires.control.NoTourViewModel
 import at.htlwels.ires.control.TourViewModel
 import at.htlwels.ires.model.Resource
 import at.htlwels.ires.view.ProgressIndicatorBox
+import at.htlwels.ires.view.Routes
 import at.htlwels.ires.view.auth.ErrorText
 import retrofit2.HttpException
 
@@ -20,14 +21,13 @@ import retrofit2.HttpException
 fun TourScreen(
     viewModel: TourViewModel,
     updateTopBar: (@Composable () -> Unit) -> Unit,
-    navTo: (Any) -> Unit
+    navTo: (Routes) -> Unit
 ){
 
-    updateTopBar { TopAppBar(
-        title = { Text("Tour")}
-    )}
-
     LaunchedEffect(Unit) {
+        updateTopBar { TopAppBar(
+            title = { Text("Tour")}
+        )}
         viewModel.fetchUserTour()
     }
 

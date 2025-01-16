@@ -138,7 +138,9 @@ fun MainScreenNavigator(
         }
 
         composable<Routes.Main.GalleryScreen>{
-            GalleryCameraPager()
+            GalleryCameraPager(
+                updateTopBar = updateTopBar
+            )
         }
 
         composable<Routes.Main.ProfileScreen>{
