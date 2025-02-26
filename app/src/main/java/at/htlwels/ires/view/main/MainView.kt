@@ -25,6 +25,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import at.htlwels.ires.control.MainViewModel
 import at.htlwels.ires.view.Routes
+import at.htlwels.ires.view.attractions.AttractionScreen
 import at.htlwels.ires.view.main.gallery.GalleryCameraPager
 import at.htlwels.ires.view.main.profile.ProfileScreen
 import at.htlwels.ires.view.main.tour.TourScreen
@@ -134,7 +135,7 @@ fun MainScreenNavigator(
         }
 
         composable<Routes.Main.ActivitiesScreen>{
-
+            AttractionScreen(updateTopBar)
         }
 
         composable<Routes.Main.GalleryScreen>{

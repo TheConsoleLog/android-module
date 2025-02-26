@@ -75,8 +75,8 @@ fun GalleryCameraPager(
         HorizontalPager(state = pagerState) { page ->
 
             when(page){
-                0 ->  { CameraScreen() }
-                1 ->  { GallerySubScreen() }
+                0 ->  CameraScreen()
+                1 ->  GallerySubScreen()
             }
         }
     }

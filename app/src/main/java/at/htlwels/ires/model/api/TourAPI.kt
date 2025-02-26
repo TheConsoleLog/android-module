@@ -1,5 +1,6 @@
 package at.htlwels.ires.model.api
 
+import at.htlwels.ires.model.dto.attractions.AttractionsResponseItem
 import at.htlwels.ires.model.dto.tour.Checkpoint
 import at.htlwels.ires.model.dto.tour.JoinTourRequest
 import at.htlwels.ires.model.dto.tour.SimpleTour
@@ -13,6 +14,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 
 private val retrofit = Retrofit
@@ -60,4 +62,11 @@ sealed interface TourAPI {
         @Header("Authorization") bearerToken: String,
         @Path("checkpointID") checkpointID: Int
     )
+
+    @GET("tour/attractions")
+    suspend fun fetchNearbyAttractions(
+        @Header("Authorization") bearerToken: String,
+        @Query("longtitude") longitude: Double,
+        @Query("latitude") latitude: Double
+    ) : List<AttractionsResponseItem>
 }

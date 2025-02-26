@@ -68,11 +68,11 @@ fun TourDetailScreen(
         updateTopBar{
             TopAppBar(
                 title = { Text(tour.name) },
-                actions = { IconButton(
-                    onClick = { showLeaveTourDialog = true }
-                ){
-                    Icon(painterResource(R.drawable.baseline_logout_24), null)
-                }}
+                actions = {
+                    IconButton(onClick = { showLeaveTourDialog = true }){
+                        Icon(painterResource(R.drawable.baseline_logout_24), null)
+                    }
+                }
             )
         }
     }

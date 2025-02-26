@@ -1,0 +1,132 @@
+package at.htlwels.ires.view.attractions
+
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.location.LocationManager
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import at.htlwels.ires.view.MainActivity
+import at.htlwels.ires.view.VerticalSpacer
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AttractionScreen(
+    updateTopBar: (@Composable () -> Unit) -> Unit
+){
+
+    updateTopBar{
+        TopAppBar(
+            title = {
+                Column {
+                    Text("Attractions")
+                    Text("Nearby", style = MaterialTheme.typography.labelMedium)
+                }
+
+            }
+        )
+    }
+
+    val context = LocalContext.current
+    var hasLocationPermissions by remember { mutableStateOf(
+        locationPermissions.all { ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED }
+    ) }
+
+
+    val requestPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions(),
+        onResult = { permissions ->
+
+            if (permissions.values.all { granted -> granted }
+            ) {
+                hasLocationPermissions = true
+
+            } else {
+
+                Toast.makeText(context, "Location permission was not granted.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    )
+
+
+
+    if(!hasLocationPermissions){
+
+        LaunchedEffect(Unit) {
+
+            requestPermissionLauncher.launch(locationPermissions)
+
+            val acceptsRationale = ActivityCompat.shouldShowRequestPermissionRationale(
+                //dont open this permission rationale inside another screen, do it inside the MainActivity
+                context as MainActivity,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+                    ||
+                    ActivityCompat.shouldShowRequestPermissionRationale(context, Manifest.permission.ACCESS_COARSE_LOCATION)
+
+            if(acceptsRationale){
+                requestPermissionLauncher.launch(locationPermissions)
+            } else println("rationale not accepted anymore")
+        }
+
+        Text("Location Permission not granted. Go to settings and enable.")
+
+    } else {
+
+        var locationServiceActive by remember { mutableStateOf( isLocationEnabled(context)) }
+
+
+        if(!locationServiceActive){
+
+            Column (modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+                Text("Device location is not active. Please activate then try again.")
+                VerticalSpacer(8)
+                Button(
+                    onClick = {
+                        locationServiceActive = isLocationEnabled(context)
+                    }
+                ) {
+                    Text("Try again")
+                }
+            }
+
+        } else {
+            Text("Location permission granted and gps active")
+
+            LazyColumn {
+                //content that requires location
+            }
+        }
+
+
+    }
+}
+
+private val locationPermissions = arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
+
+
+fun isLocationEnabled(context: Context): Boolean {
+    val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+    return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+            locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+}
