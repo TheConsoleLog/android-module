@@ -2,19 +2,27 @@ package at.htlwels.ires.view.attractions
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.LocationManager
+import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -26,6 +34,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import at.htlwels.ires.control.AttractionsViewModel
@@ -138,15 +148,34 @@ fun AttractionScreen(
                     is Resource.Error -> ErrorBox(retry = viewModel::fetchAttractionsNearby, errorText = attractions.getMessage())
                     is Resource.Success -> {
 
-                        LazyColumn {
+                        LazyColumn (modifier = Modifier.padding(8.dp)) {
 
                             this.items(attractions.data){
                                 Card {
-                                    Column {
-                                        Text(it.name)
+                                    Column (modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+                                        Text(it.name, fontWeight = FontWeight.Bold)
                                         Text(it.address)
+
+                                        OutlinedButton(
+                                            onClick = {
+                                                val encodedLocation = Uri.encode(it.address)
+                                                val gmmIntentUri = Uri.parse("geo:0,0?q=$encodedLocation")
+
+                                                Intent(Intent.ACTION_VIEW, gmmIntentUri).let {
+                                                    it.setPackage("com.google.android.apps.maps")
+                                                    context.startActivity(it)
+                                                }
+                                            }
+                                        ) {
+                                            Row (verticalAlignment = Alignment.CenterVertically) {
+                                                Icon(Icons.Default.LocationOn, null)
+                                                VerticalSpacer(8)
+                                                Text("Open in Google Maps")
+                                            }
+                                        }
                                     }
                                 }
+                                VerticalSpacer(8)
                             }
                         }
                     }
