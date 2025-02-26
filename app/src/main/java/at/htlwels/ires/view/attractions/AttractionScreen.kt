@@ -10,9 +10,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -26,23 +28,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import at.htlwels.ires.control.AttractionsViewModel
+import at.htlwels.ires.model.Resource
+import at.htlwels.ires.view.ErrorBox
 import at.htlwels.ires.view.MainActivity
 import at.htlwels.ires.view.VerticalSpacer
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AttractionScreen(
-    updateTopBar: (@Composable () -> Unit) -> Unit
+    updateTopBar: (@Composable () -> Unit) -> Unit,
+    viewModel: AttractionsViewModel
 ){
 
     updateTopBar{
         TopAppBar(
             title = {
-                Column {
-                    Text("Attractions")
-                    Text("Nearby", style = MaterialTheme.typography.labelMedium)
-                }
-
+                Text("Attractions nearby")
             }
         )
     }
@@ -111,14 +113,46 @@ fun AttractionScreen(
             }
 
         } else {
-            Text("Location permission granted and gps active")
 
-            LazyColumn {
-                //content that requires location
+            LaunchedEffect(Unit) {
+                viewModel.requestLocationUpdates()
+            }
+
+            if(viewModel.locationState.value == null){
+                Column {
+                    Text("Loading your Coordinates.")
+                    VerticalSpacer(8)
+                    CircularProgressIndicator()
+                }
+            } else {
+
+                when(val attractions = viewModel.attractionsState.value){
+                    is Resource.Ready -> {}
+                    is Resource.Loading -> {
+                        Column {
+                            Text("Fetching attractions nearby.")
+                            VerticalSpacer(8)
+                            CircularProgressIndicator()
+                        }
+                    }
+                    is Resource.Error -> ErrorBox(retry = viewModel::fetchAttractionsNearby, errorText = attractions.getMessage())
+                    is Resource.Success -> {
+
+                        LazyColumn {
+
+                            this.items(attractions.data){
+                                Card {
+                                    Column {
+                                        Text(it.name)
+                                        Text(it.address)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
-
-
     }
 }
 

@@ -21,8 +21,6 @@ class MainViewModel : ViewModel() {
         _currentScreen.value = screen
     }
 
-    val showSearchBarState = mutableStateOf(false)
-
     val mainRoutesInfo = linkedMapOf<Routes.Main, @Composable () -> Unit>(
         Routes.Main.TourScreen to {},
         Routes.Main.ActivitiesScreen to {},

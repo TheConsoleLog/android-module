@@ -5,6 +5,7 @@ import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -45,6 +46,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import at.htlwels.ires.R
+import at.htlwels.ires.view.auth.ErrorText
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -233,3 +235,21 @@ fun TimerPickerModal(
     }
 }
 
+@Composable
+fun ErrorBox(
+    retry: () -> Unit,
+    errorText: String
+){
+    Column (
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        ErrorText(errorText)
+        VerticalSpacer(8)
+        Button(
+            onClick = retry
+        ) {
+            Text("Try Again")
+        }
+    }
+}

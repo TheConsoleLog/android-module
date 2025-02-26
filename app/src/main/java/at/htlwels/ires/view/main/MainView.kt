@@ -135,7 +135,7 @@ fun MainScreenNavigator(
         }
 
         composable<Routes.Main.ActivitiesScreen>{
-            AttractionScreen(updateTopBar)
+            AttractionScreen(updateTopBar, viewModel())
         }
 
         composable<Routes.Main.GalleryScreen>{
