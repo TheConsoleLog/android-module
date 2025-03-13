@@ -1,5 +1,5 @@
 [versions]
-agp = "8.7.2"
+agp = "8.7.3"
 cameraxVersion = "1.4.0"
 composeQrCode = "1.0.1"
 kotlin = "2.0.0"
@@ -14,6 +14,7 @@ navigationCompose = "2.8.4"
 serialization = "1.6.3"
 retrofit = "2.9.0"
 converterGson = "2.9.0"
+stripeAndroid = "21.4.2"
 zxing = "3.3.3"
 playServicesLocation = "21.3.0"
 
@@ -44,6 +45,7 @@ androidx-navigation-compose = { group = "androidx.navigation", name = "navigatio
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 
+stripe-android = { module = "com.stripe:stripe-android", version.ref = "stripeAndroid" }
 zxing = { module = "com.google.zxing:core", version.ref = "zxing" }
 
 

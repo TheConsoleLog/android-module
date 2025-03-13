@@ -14,6 +14,7 @@ object Constants {
     const val SHARED_PREF_FILE = "tokens"
 
 
+    const val STRIPE_API_KEY = "pk_test_51Qx6qK4fJFLnAbUNgEHCXcsFCZfVUbw9IDSi4F8iYGrz7ZfpfTXYEl8NiXbl7chYrPkbWqDZtNeKCoJkBq9Y51db00qPLHFtNL"
 
     object DateUtils{
 

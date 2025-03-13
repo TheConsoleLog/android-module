@@ -32,7 +32,9 @@ sealed interface Routes{
         @Serializable
         data object GalleryScreen: Main("Gallery", R.drawable.baseline_photo_library_24)
         @Serializable
-        data object ProfileScreen: Main("Profile", R.drawable.baseline_person_24)
+        data object ProfileScreen: Main("Profile", R.drawable.baseline_person_24) {
+            @Serializable data object BuyPremiumScreen : Routes
+        }
     }
 
 

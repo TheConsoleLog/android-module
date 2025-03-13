@@ -79,4 +79,8 @@ dependencies {
 
     //QR Code Generating
     implementation(libs.compose.qr.code)
+
+
+    //in-app payments
+    implementation(libs.stripe.android)
 }

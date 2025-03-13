@@ -22,12 +22,14 @@ import at.htlwels.ires.view.theme.IresTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-//TODO chatgpt login Hintergrund
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+
         setContent {
+
             IresTheme {
                 TopLevelNavigator()
             }
