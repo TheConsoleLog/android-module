@@ -8,5 +8,6 @@ data class AttractionsResponseItem(
     val openingHours: Boolean,
     val rating: Double,
     val types: List<String>,
-    val userRatingsTotal: Int
+    val userRatingsTotal: Int,
+    val image: String?
 )

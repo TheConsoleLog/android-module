@@ -41,12 +41,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import at.htlwels.ires.R
 import at.htlwels.ires.view.auth.ErrorText
+import coil.compose.AsyncImage
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -252,4 +254,24 @@ fun ErrorBox(
             Text("Try Again")
         }
     }
+}
+
+
+@Composable
+fun AsyncImageWithFallback(
+    model: Any?,
+    contentDescription: String? = null,
+    modifier:Modifier = Modifier,
+    contentScale: ContentScale = ContentScale.Fit
+){
+    val fallback = painterResource(R.drawable.fallback_image)
+    AsyncImage(
+        model = model,
+        contentDescription = contentDescription,
+        error = fallback,
+        placeholder = fallback,
+        fallback = fallback,
+        modifier = modifier,
+        contentScale = contentScale,
+    )
 }

@@ -160,20 +160,11 @@ fun ProfileScreen(
 
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                     Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp)
+                        modifier = Modifier.fillMaxWidth().padding(16.dp)
                     ) {
-
                         when (val profileState = viewModel.profileState.value) {
-                            is Resource.Loading -> {
-                                CircularProgressIndicator()
-                            }
-
-                            is Resource.Error -> {
-                                ErrorText(profileState.getMessage())
-                            }
-
+                            is Resource.Loading -> CircularProgressIndicator()
+                            is Resource.Error -> ErrorText(profileState.getMessage())
                             is Resource.Ready -> {}
                             is Resource.Success -> {
 
@@ -181,8 +172,7 @@ fun ProfileScreen(
 
                                 val lazyListState = rememberLazyListState()
                                 val lazyListScope = rememberCoroutineScope()
-                                val firstVisibleItem =
-                                    remember { derivedStateOf { lazyListState.firstVisibleItemIndex } }
+                                val firstVisibleItem = remember { derivedStateOf { lazyListState.firstVisibleItemIndex } }
 
                                 if (firstVisibleItem.value >= 2) {
                                     FloatingActionButton(
@@ -224,14 +214,10 @@ fun ProfileScreen(
 
                                             Card(modifier = Modifier.fillMaxWidth()) {
                                                 Column(
-                                                    modifier = Modifier
-                                                        .fillMaxWidth()
-                                                        .padding(horizontal = 16.dp)
+                                                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
                                                 ) {
                                                     Box(
-                                                        modifier = Modifier
-                                                            .fillMaxWidth()
-                                                            .padding(vertical = 12.dp),
+                                                        modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp),
                                                         contentAlignment = Alignment.Center
                                                     ) {
                                                         Text(profile.email)
@@ -239,9 +225,7 @@ fun ProfileScreen(
                                                     HorizontalDivider()
                                                     Row(
                                                         horizontalArrangement = Arrangement.SpaceBetween,
-                                                        modifier = Modifier
-                                                            .fillMaxWidth()
-                                                            .padding(vertical = 12.dp)
+                                                        modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp)
                                                     ) {
                                                         Text("First Name")
                                                         Text(profile.firstName)
@@ -249,9 +233,7 @@ fun ProfileScreen(
                                                     HorizontalDivider()
                                                     Row(
                                                         horizontalArrangement = Arrangement.SpaceBetween,
-                                                        modifier = Modifier
-                                                            .fillMaxWidth()
-                                                            .padding(vertical = 12.dp)
+                                                        modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp)
                                                     ) {
                                                         Text("Last Name")
                                                         Text(profile.lastName)
@@ -275,7 +257,6 @@ fun ProfileScreen(
                                                     }
                                                 }
                                             }
-
                                             VerticalSpacer(16)
                                         }
                                     }

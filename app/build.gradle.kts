@@ -83,4 +83,7 @@ dependencies {
 
     //in-app payments
     implementation(libs.stripe.android)
+
+    //coil-compose
+    implementation(libs.coil.compose)
 }
