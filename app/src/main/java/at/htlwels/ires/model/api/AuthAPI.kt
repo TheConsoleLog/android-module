@@ -21,7 +21,7 @@ import retrofit2.http.Path
 
 private val retrofit = Retrofit
     .Builder()
-    .baseUrl("https://itp-backend-1062658395636.europe-west3.run.app/")
+    .baseUrl("http://192.168.0.156:3000/")
     .addConverterFactory(GsonConverterFactory.create())
     .build()
 

@@ -17,7 +17,6 @@ class PremiumViewModel : ViewModel() {
     ) {
         println("requesting payment intent")
         paymentService.createPaymentIntent(
-            body = PaymentIntentRequest(amount, currency),
             bearerToken = TokenRepository.getAccessWithBearer()
         ).enqueue(object : retrofit2.Callback<PaymentIntentResponse> {
 
